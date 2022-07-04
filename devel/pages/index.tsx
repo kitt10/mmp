@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { css } from '@emotion/react'
 import Page from '../components/core/Page'
 import { StyleI, useMainContext } from '../context/MainContext'
+import Overview from '../components/Overview'
 
 const notLaunchedMessageS = (style: StyleI) => css({
   width: '100%',
@@ -26,9 +27,7 @@ const Home = () => {
   return (
     <Page title='MMP 2022' description='9. ročník Memoriálu Martina Procházky (2022)'>
       {gameLaunched &&
-        <Fragment>
-          game launched...
-        </Fragment>
+        <Overview />
       }
       {!gameLaunched &&
         <div css={notLaunchedMessageS(style)}>

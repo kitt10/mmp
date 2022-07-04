@@ -17,19 +17,15 @@ const componentS = (style: StyleI) => css({
     alignItems: 'center'
 })
 
-interface TableI {
-    group: string
-}
-
-const Table: React.FunctionComponent<TableI> = ({ group }) => {
+const PlayOff: React.FunctionComponent = () => {
 
     const { style } = useMainContext()
 
     return (
         <div css={componentS(style)}>
-            table {group}
+            play-off
         </div>
     )
 }
 
-export default Table
+export default PlayOff

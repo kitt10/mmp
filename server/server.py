@@ -2,7 +2,7 @@ from tornado.web import Application, RequestHandler, StaticFileHandler
 from tornado.ioloop import IOLoop
 from tornado.escape import json_decode
 from os.path import join, dirname, isfile
-from json import dumps as json_dumps, dump as json_dump
+from json import dumps as json_dumps, dump as json_dump, load as json_load
 import numpy as np
 
 class EP_Web(RequestHandler):
@@ -31,6 +31,10 @@ class EP_IsLaunched(RequestHandler):
         
 class EP_Launch(RequestHandler):
     
+    def initialize(self, webserver, worker):
+        self.webserver = webserver
+        self.worker = worker
+    
     def post(self):
         query = json_decode(self.request.body)
         draw = query['draw']
@@ -38,7 +42,10 @@ class EP_Launch(RequestHandler):
         with open('../data/draw.json', 'w', encoding='utf-8') as jfw:
             json_dump(draw, jfw)
         
-        print('File written.')
+        print('Draw written. Generating schedule...')
+        
+        self.worker.generate_schedule()
+        
         self.write(json_dumps({'status': 'OK'}))
         
     def options(self):
@@ -83,7 +90,7 @@ class WebServer:
         urls = [('/', EP_Web),
                 (r'/admin', EP_WebAdmin),
                 ('/islaunched/', EP_IsLaunched),
-                ('/launch/', EP_Launch),
+                ('/launch/', EP_Launch, {'webserver': self, 'worker': self.worker}),
                 ('/update/', EP_Update, {'webserver': self, 'worker': self.worker}),
                 ('/(.*)', StaticFileHandler, {'path': self.static_path})]
 
@@ -106,9 +113,43 @@ class Worker:
     def __init__(self, base_static_path):
         self.base_static_path = base_static_path
     
-    def update(self, data):
-        print('[LOG] Updated.')
-        return ''
+    def generate_schedule(self):
+        print('[LOG] Generating schedule...')
+        
+        groups = ('A', 'B')
+
+        with open('../data/key.json') as f:  
+            keys = json_load(f)
+
+        with open('../data/draw.json') as f:  
+            draw = json_load(f)
+
+        schedule = dict((g, list()) for g in groups)
+
+        for g in groups:
+            n = len(draw[g])
+            key = keys[str(n)]
+            for ik, k in enumerate(key):
+                t1_ind = int(k[0])-1
+                t2_ind = int(k[1])-1
+                
+                match = dict()
+                match['nb'] = ik+1
+                match['teamHome'] = draw[g][t1_ind]
+                match['teamAway'] = draw[g][t2_ind]
+                match['finished'] = False
+                match['scoreHome'] = 0
+                match['scoreAway'] = 0
+                match['estimatedStart'] = ''
+                match['pointsHome'] = []
+                match['pointsAway'] = []
+                schedule[g].append(match)
+
+        with open('../data/schedule.json', 'w') as f:
+            json_dump(schedule, f)
+
+        print('[LOG] Schedule generated.')
+    
     
 
 if __name__ == '__main__':
