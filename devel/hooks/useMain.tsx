@@ -3,7 +3,7 @@ import { globalStyle, pageS, colors, view, COLORS, LETTERS } from '../config/sty
 import { MainContextI, DeviceI } from '../context/MainContext'
 import { get, post } from '../fcn/http'
 import { cfg } from '../config/config'
-import { DrawI } from '../context/DataContext'
+import { DrawI, ScheduleItemI } from '../context/DataContext'
 
 export const useMain = () => {
 
@@ -13,6 +13,20 @@ export const useMain = () => {
     const device: DeviceI = {
         isMobile: isMobile,
         setIsMobile: setIsMobile
+    }
+
+    const updateSchedule = async (section: string, nb: number, match: ScheduleItemI) => {
+        const body = {
+            'section': section,
+            'nb': nb,
+            'match': match
+        }
+        
+        await post(cfg.serverURL+'/update/', body).then(async (data: any) => {
+            console.log('Schedule updated.', data.status)
+        }).catch(() => {
+            console.log('Unable to update the schedule.')
+        })
     }
 
     const launchGame = async (draw: DrawI) => {
@@ -47,7 +61,8 @@ export const useMain = () => {
         },
         device: device,
         gameLaunched: gameLaunched,
-        launchGame: launchGame
+        launchGame: launchGame,
+        updateSchedule: updateSchedule
     }
 
     return mainContext

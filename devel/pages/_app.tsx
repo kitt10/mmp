@@ -12,8 +12,8 @@ const MainApp = ({ Component, pageProps }: AppProps) => {
   const dataContext = useData()
 
   useEffect(() => {
-    if (!dataContext.dataLoaded) {
-      dataContext.loadData()
+    if (mainContext.gameLaunched) {
+      dataContext.loadSchedule()
     }
   }, [])
 

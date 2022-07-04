@@ -29,11 +29,14 @@ export interface PlayerI {
 }
 
 export interface ScheduleI {
-  [group: string]: ScheduleItemI[]
+  [group: string]: {
+    [nb: number]: ScheduleItemI
+  }
 }
 
 export interface ScheduleItemI {
   nb: number
+  id: string
   teamHome: TeamI
   teamAway: TeamI
   finished: boolean
@@ -51,11 +54,21 @@ export interface playerPointsI {
   }
 }
 
+export interface lastMatchIndI {
+  [group: string]: number
+}
+
+export const defaultLastMatchInd: lastMatchIndI = {
+    'A': 0,
+    'B': 0,
+    'P': 0
+}
+
 export interface DataContextI {
-  dataLoaded: boolean
-  loadData: () => void
-  key: KeyI
-  draw: DrawI
+  scheduleLoaded: boolean
+  schedule: ScheduleI
+  loadSchedule: () => void
+  lastMatchInd: lastMatchIndI
 }
 
 const DataContext = createContext<DataContextI>({} as DataContextI)

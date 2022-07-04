@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { SerializedStyles } from '@emotion/react'
-import { DrawI } from './DataContext'
+import { DrawI, ScheduleItemI } from './DataContext'
 
 export interface StyleI {
   globalStyle: SerializedStyles
@@ -21,6 +21,7 @@ export interface MainContextI {
   device: DeviceI
   gameLaunched: boolean
   launchGame: (draw: DrawI) => void
+  updateSchedule: (section: string, nb: number, match: ScheduleItemI) => void
 }
 
 const MainContext = createContext<MainContextI>({} as MainContextI)

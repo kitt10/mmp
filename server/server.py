@@ -29,6 +29,28 @@ class EP_IsLaunched(RequestHandler):
         self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.set_header("Access-Control-Request-Headers", "Content-Type")
         
+class EP_Schedule(RequestHandler):
+    
+    def get(self):
+        print('Loading schedule.')
+        try:
+            with open('../data/schedule.json', 'r') as jfr:
+                ret = json_load(jfr)
+        except:
+            print('Error loading schedule.')
+            ret = {}
+            
+        self.write(json_dumps({'schedule': ret}))
+        
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.set_header("Access-Control-Request-Headers", "Content-Type")
+        
 class EP_Launch(RequestHandler):
     
     def initialize(self, webserver, worker):
@@ -90,6 +112,7 @@ class WebServer:
         urls = [('/', EP_Web),
                 (r'/admin', EP_WebAdmin),
                 ('/islaunched/', EP_IsLaunched),
+                ('/schedule/', EP_Schedule),
                 ('/launch/', EP_Launch, {'webserver': self, 'worker': self.worker}),
                 ('/update/', EP_Update, {'webserver': self, 'worker': self.worker}),
                 ('/(.*)', StaticFileHandler, {'path': self.static_path})]
@@ -124,7 +147,7 @@ class Worker:
         with open('../data/draw.json') as f:  
             draw = json_load(f)
 
-        schedule = dict((g, list()) for g in groups)
+        schedule = dict((g, dict()) for g in groups)
 
         for g in groups:
             n = len(draw[g])
@@ -135,6 +158,7 @@ class Worker:
                 
                 match = dict()
                 match['nb'] = ik+1
+                match['id'] = g+'_'+str(match['nb'])
                 match['teamHome'] = draw[g][t1_ind]
                 match['teamAway'] = draw[g][t2_ind]
                 match['finished'] = False
@@ -143,7 +167,26 @@ class Worker:
                 match['estimatedStart'] = ''
                 match['pointsHome'] = []
                 match['pointsAway'] = []
-                schedule[g].append(match)
+                schedule[g][match['nb']] = match
+        
+        matches = ('Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
+        labels = ('A1xB4', 'B2xA3', 'B1xA4', 'B3xA2', 'A1/B4xB2/A3', 'B1/A4xB3/A2', '?x?', '?x?')
+        
+        for ipm, (pm, lab) in enumerate(zip(matches, labels)):
+            vals = lab.split('x')
+            match = dict()
+            match['nb'] = ipm+1
+            match['id'] = pm
+            match['teamHome'] = vals[0]
+            match['teamAway'] = vals[1]
+            match['finished'] = False
+            match['scoreHome'] = 0
+            match['scoreAway'] = 0
+            match['estimatedStart'] = ''
+            match['pointsHome'] = []
+            match['pointsAway'] = []
+                
+            schedule['P'][ipm+1] = match
 
         with open('../data/schedule.json', 'w') as f:
             json_dump(schedule, f)
