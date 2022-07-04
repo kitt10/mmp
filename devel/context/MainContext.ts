@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react'
 import { SerializedStyles } from '@emotion/react'
-
-export type pageT = 'systems' | 'utterances' | 'listeners' | 'solvers' | 'submit' | 'readme'
+import { DrawI } from './DataContext'
 
 export interface StyleI {
   globalStyle: SerializedStyles
@@ -20,8 +19,8 @@ export interface DeviceI {
 export interface MainContextI {
   style: StyleI
   device: DeviceI
-  page: pageT
-  setPage: (page: pageT) => void
+  gameLaunched: boolean
+  launchGame: (draw: DrawI) => void
 }
 
 const MainContext = createContext<MainContextI>({} as MainContextI)

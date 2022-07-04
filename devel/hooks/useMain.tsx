@@ -1,16 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { globalStyle, pageS, colors, view, COLORS, LETTERS } from '../config/style'
-import { MainContextI, pageT, DeviceI } from '../context/MainContext'
+import { MainContextI, DeviceI } from '../context/MainContext'
+import { get, post } from '../fcn/http'
+import { cfg } from '../config/config'
+import { DrawI } from '../context/DataContext'
 
 export const useMain = () => {
 
-    const [page, setPage] = useState('systems' as pageT)
     const [isMobile, setIsMobile] = useState(false)
+    const [gameLaunched, setGameLaunched] = useState(false)
 
     const device: DeviceI = {
         isMobile: isMobile,
         setIsMobile: setIsMobile
     }
+
+    const launchGame = async (draw: DrawI) => {
+        await post(cfg.serverURL+'/launch/', {'draw': draw}).then(async (data: any) => {
+            console.log('Tournament launched.', data.status)
+        }).catch(() => {
+            console.log('Unable to launch the game.')
+        })
+    }
+
+    const checkIsLaunched = async () => {
+        await get(cfg.serverURL+'/islaunched/', true).then(async (data: any) => {
+            setGameLaunched(data.launched)
+        }).catch(() => {
+            console.log('Unable to fetch isLaunched data.')
+            setGameLaunched(false)
+        })
+    }
+
+    useEffect(() => {
+        checkIsLaunched()
+    }, [])
 
     const mainContext: MainContextI = {
         style: {
@@ -22,8 +46,8 @@ export const useMain = () => {
             LETTERS: LETTERS
         },
         device: device,
-        page: page,
-        setPage: setPage
+        gameLaunched: gameLaunched,
+        launchGame: launchGame
     }
 
     return mainContext

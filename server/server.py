@@ -1,9 +1,9 @@
 from tornado.web import Application, RequestHandler, StaticFileHandler
 from tornado.ioloop import IOLoop
 from tornado.escape import json_decode
-from os.path import join, dirname
+from os.path import join, dirname, isfile
+from json import dumps as json_dumps, dump as json_dump
 import numpy as np
-import json
 
 class EP_Web(RequestHandler):
 
@@ -15,6 +15,41 @@ class EP_WebAdmin(RequestHandler):
     def get(self):
         self.render('../deploy/admin.html')
 
+class EP_IsLaunched(RequestHandler):
+    
+    def get(self):
+        self.write(json_dumps({'launched': isfile('../data/draw.json')}))
+        
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.set_header("Access-Control-Request-Headers", "Content-Type")
+        
+class EP_Launch(RequestHandler):
+    
+    def post(self):
+        query = json_decode(self.request.body)
+        draw = query['draw']
+        print('Got draw:', draw)
+        with open('../data/draw.json', 'w', encoding='utf-8') as jfw:
+            json_dump(draw, jfw)
+        
+        print('File written.')
+        self.write(json_dumps({'status': 'OK'}))
+        
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.set_header("Access-Control-Request-Headers", "Content-Type")
+        
 class EP_Update(RequestHandler):
 
     def initialize(self, webserver, worker):
@@ -47,6 +82,8 @@ class WebServer:
         
         urls = [('/', EP_Web),
                 (r'/admin', EP_WebAdmin),
+                ('/islaunched/', EP_IsLaunched),
+                ('/launch/', EP_Launch),
                 ('/update/', EP_Update, {'webserver': self, 'worker': self.worker}),
                 ('/(.*)', StaticFileHandler, {'path': self.static_path})]
 
