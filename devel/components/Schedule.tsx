@@ -20,13 +20,14 @@ const titleS = (style: StyleI) => css({
     paddingTop: '7px',
     paddingBottom: '7px',
     fontVariant: 'small-caps',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: '15px'
 })
 
 const tableS = (style: StyleI) => css({
     width: '100%',
     'td': {
-        fontSize: '11px'
+        fontSize: '9px'
     }
 })
 

@@ -20,7 +20,8 @@ const titleS = (style: StyleI) => css({
     paddingTop: '7px',
     paddingBottom: '7px',
     fontVariant: 'small-caps',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: '15px'
 })
 
 const tdCenterS = (style: StyleI) => css({
@@ -30,7 +31,7 @@ const tdCenterS = (style: StyleI) => css({
 const tableS = (style: StyleI) => css({
     width: '100%',
     'td': {
-        fontSize: '10px'
+        fontSize: '9px'
     },
     'th': {
         fontWeight: 'bold',

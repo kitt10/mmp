@@ -23,7 +23,8 @@ const titleS = (style: StyleI) => css({
     paddingTop: '7px',
     paddingBottom: '7px',
     fontVariant: 'small-caps',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: '15px'
 })
 
 const tableS = (style: StyleI) => css({
@@ -33,7 +34,7 @@ const tableS = (style: StyleI) => css({
     },
     'th': {
         fontWeight: 'bold',
-        fontSize: '12px',
+        fontSize: '11px',
         paddingBottom: '10px'
     }
 })
