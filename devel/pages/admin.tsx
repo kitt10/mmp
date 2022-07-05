@@ -12,7 +12,8 @@ const componentS = (style: StyleI) => css({
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: '50px'
+  marginTop: '50px',
+  overflowY: 'scroll'
 })
 
 const Admin = () => {

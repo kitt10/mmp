@@ -103,16 +103,21 @@ const points2text = (points: playerPointsI) => {
 }
 
 const text2points = (text: string) => {
-    let points = {} as playerPointsI
-    let lines = text.split('\n')
-    for (let line in lines) {
-        let vals = line.split(':')
-        points[vals[0]] = {
-            goals: +vals[1],
-            assists: +vals[2]
+    try {
+        let points = {} as playerPointsI
+        let lines = text.split('\n')
+        for (let line of lines) {
+            let vals = line.split(':')
+            points[vals[0]] = {
+                goals: +vals[1],
+                assists: +vals[2]
+            }
         }
+        return points
+    } catch {
+        console.log('Exception in text2points,',  text)
+        return {} as playerPointsI
     }
-    return points
 }
 
 interface SubmitBlockI {
@@ -152,16 +157,24 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     }
 
     const handleScoreHomeChanged = () => {
-        if (refGoalsHome.current) {
-            setValScoreHome(+refGoalsHome.current.value)
-            setMatch({...match, scoreHome: +refGoalsHome.current.value})
+        try {
+            if (refGoalsHome.current) {
+                setValScoreHome(+refGoalsHome.current.value)
+                setMatch({...match, scoreHome: +refGoalsHome.current.value})
+            }
+        } catch {
+            console.log('Exception in handleScoreHomeChanged()')
         }
     }
 
     const handleScoreAwayChanged = () => {
-        if (refGoalsAway.current) {
-            setValScoreAway(+refGoalsAway.current.value)
-            setMatch({...match, scoreAway: +refGoalsAway.current.value})
+        try {
+            if (refGoalsAway.current) {
+                setValScoreAway(+refGoalsAway.current.value)
+                setMatch({...match, scoreAway: +refGoalsAway.current.value})
+            }
+        } catch {
+            console.log('Exception in handleScoreHomeChanged()')
         }
     }
 
