@@ -166,8 +166,8 @@ class Worker:
                 match['scoreHome'] = 0
                 match['scoreAway'] = 0
                 match['estimatedStart'] = ''
-                match['pointsHome'] = []
-                match['pointsAway'] = []
+                match['pointsHome'] = dict()
+                match['pointsAway'] = dict()
                 schedule[g][match['nb']] = match
         
         matches = ('Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
@@ -184,8 +184,8 @@ class Worker:
             match['scoreHome'] = 0
             match['scoreAway'] = 0
             match['estimatedStart'] = ''
-            match['pointsHome'] = []
-            match['pointsAway'] = []
+            match['pointsHome'] = dict()
+            match['pointsAway'] = dict()
                 
             schedule['P'][ipm+1] = match
 

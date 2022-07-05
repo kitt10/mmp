@@ -43,8 +43,8 @@ export interface ScheduleItemI {
   scoreHome: number
   scoreAway: number
   estimatedStart: string
-  pointsHome: playerPointsI[]
-  pointsAway: playerPointsI[]
+  pointsHome: playerPointsI
+  pointsAway: playerPointsI
 }
 
 export interface playerPointsI {

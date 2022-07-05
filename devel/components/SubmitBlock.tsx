@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createRef } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
-import { ScheduleItemI, useDataContext } from '../context/DataContext'
+import { playerPointsI, ScheduleItemI, useDataContext } from '../context/DataContext'
 import IconButton from './atomic/IconButton'
 
 
@@ -36,8 +36,7 @@ const barS = (style: StyleI) => css({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontSize: '15px',
-    border: '1px solid red'
+    fontSize: '15px'
 })
 
 const matchTableS = (style: StyleI) => css({
@@ -57,6 +56,15 @@ const inputS = (style: StyleI) => css({
     fontSize: '15px',
     borderRadius: '5px',
     textAlign: 'center'
+})
+
+const pointsS = (style: StyleI) => css({
+    padding: '5px',
+    width: '150px',
+    height: '200px',
+    fontSize: '13px',
+    borderRadius: '5px',
+    textAlign: 'left'
 })
 
 const teamNameTdS = (style: StyleI) => css({
@@ -81,6 +89,32 @@ const submitButtonS = (style: StyleI) => css({
     }
 })
 
+const points2text = (points: playerPointsI) => {
+    try {
+        let text = ''
+        for (let [k, v] of Object.entries(points)) {
+            text += k+':'+v.goals.toString()+':'+v.assists.toString()+'\n'
+        }
+        return text
+    } catch {
+        console.log('Exception in points2text,', Object.entries(points))
+        return ''
+    }
+}
+
+const text2points = (text: string) => {
+    let points = {} as playerPointsI
+    let lines = text.split('\n')
+    for (let line in lines) {
+        let vals = line.split(':')
+        points[vals[0]] = {
+            goals: +vals[1],
+            assists: +vals[2]
+        }
+    }
+    return points
+}
+
 interface SubmitBlockI {
     section: string
 }
@@ -94,9 +128,15 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     const [currentInd, setCurrentInd] = useState(lastMatchInd[group])
 
     const [match, setMatch] = useState({...schedule[group][currentInd]})
+    const [valScoreHome, setValScoreHome] = useState(match.scoreHome)
+    const [valScoreAway, setValScoreAway] = useState(match.scoreAway)
+    const [valPointsHome, setValPointsHome] = useState(points2text(match.pointsHome))
+    const [valPointsAway, setValPointsAway] = useState(points2text(match.pointsAway))
 
     const refGoalsHome: React.RefObject<HTMLInputElement> = createRef() as React.RefObject<HTMLInputElement>
     const refGoalsAway: React.RefObject<HTMLInputElement> = createRef() as React.RefObject<HTMLInputElement>
+    const refPointsHome: React.RefObject<HTMLTextAreaElement> = createRef() as React.RefObject<HTMLTextAreaElement>
+    const refPointsAway: React.RefObject<HTMLTextAreaElement> = createRef() as React.RefObject<HTMLTextAreaElement>
 
     const handleUpdate = async () => {
         updateSchedule(
@@ -104,6 +144,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
             match.nb,
             match
         )
+        console.log('sending match:', match)
     }
 
     const handleFinishedClicked = () => {
@@ -112,13 +153,31 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
 
     const handleScoreHomeChanged = () => {
         if (refGoalsHome.current) {
+            setValScoreHome(+refGoalsHome.current.value)
             setMatch({...match, scoreHome: +refGoalsHome.current.value})
         }
     }
 
     const handleScoreAwayChanged = () => {
         if (refGoalsAway.current) {
+            setValScoreAway(+refGoalsAway.current.value)
             setMatch({...match, scoreAway: +refGoalsAway.current.value})
+        }
+    }
+
+    const handlePointsHomeChanged = () => {
+        if (refPointsHome.current) {
+            let text = refPointsHome.current.value
+            setValPointsHome(text)
+            setMatch({...match, pointsHome: text2points(text)})
+        }
+    }
+
+    const handlePointsAwayChanged = () => {
+        if (refPointsAway.current) {
+            let text = refPointsAway.current.value
+            setValPointsAway(text)
+            setMatch({...match, pointsAway: text2points(text)})
         }
     }
 
@@ -137,6 +196,13 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     useEffect(() => {
         setMatch({...schedule[group][currentInd]})
     }, [currentInd])
+
+    useEffect(() => {
+        setValScoreHome(match.scoreHome)
+        setValScoreAway(match.scoreAway)
+        setValPointsHome(points2text(match.pointsHome))
+        setValPointsAway(points2text(match.pointsAway))
+    }, [match])
 
     return (
         <div css={componentS(style)}>
@@ -175,7 +241,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
                             <input 
                                 ref={refGoalsHome}
                                 type={'text'}
-                                defaultValue={match.scoreHome}
+                                value={valScoreHome}
                                 onChange={() => handleScoreHomeChanged()}
                                 css={inputS(style)} />
                         </td>
@@ -183,9 +249,25 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
                             <input 
                                 ref={refGoalsAway}
                                 type={'text'}
-                                defaultValue={match.scoreAway}
+                                value={valScoreAway}
                                 onChange={() => handleScoreAwayChanged()}
                                 css={inputS(style)} />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <textarea 
+                                ref={refPointsHome}
+                                defaultValue={points2text(match.pointsHome)}
+                                onChange={() => handlePointsHomeChanged()}
+                                css={pointsS(style)} />
+                        </td>
+                        <td>
+                            <textarea 
+                                ref={refPointsAway}
+                                defaultValue={points2text(match.pointsAway)}
+                                onChange={() => handlePointsAwayChanged()}
+                                css={pointsS(style)} />
                         </td>
                     </tr>
                 </tbody>
