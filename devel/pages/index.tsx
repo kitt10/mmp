@@ -24,16 +24,17 @@ const logoS = (style: StyleI) => css({
 const Home = () => {
 
   const { style, gameLaunched } = useMainContext()
-  const { schedule } = useDataContext()
+  const { schedule, teams, players } = useDataContext()
 
   const scheduleLoaded = Object.keys(schedule).includes('A') && Object.keys(schedule).includes('B') && Object.keys(schedule).includes('P')
+  const statsComputed = Object.keys(teams).length > 0 && Object.keys(players).length > 0
 
   return (
     <Page title='MMP 2022' description='9. ročník Memoriálu Martina Procházky (2022)'>
-      {gameLaunched && scheduleLoaded &&
+      {gameLaunched && scheduleLoaded && statsComputed &&
         <Overview />
       }
-      {!gameLaunched && scheduleLoaded &&
+      {!gameLaunched &&
         <div css={notLaunchedMessageS(style)}>
           {'Turnaj ještě nebyl zahájen. \xa0\xa0\xa0 Čekáme na losování. \xa0\xa0\xa0 Máš formu?'}
           <img css={logoS(style)} src='img/logo.png' />

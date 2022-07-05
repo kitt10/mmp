@@ -26,8 +26,17 @@ const titleS = (style: StyleI) => css({
 const tableS = (style: StyleI) => css({
     width: '100%',
     'td': {
-        fontSize: '10px'
+        fontSize: '11px'
     }
+})
+
+const tdCenterS = (style: StyleI) => css({
+    textAlign: 'center'
+})
+
+const pointsS = (style: StyleI) => css({
+    fontSize: '90%',
+    color: 'darkgray'
 })
 
 interface ScheduleI {
@@ -47,17 +56,17 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ group }) => {
             <table css={tableS(style)}>
                 <tbody>
                     {Object.entries(schedule[group]).map(([k, v]) => 
-                        <tr key={rKey()}>
+                        <tr key={rKey()} css={{'color': v.finished ? 'maroon' : 'black'}}>
                             <td>
                                 {v.nb}
                             </td>
                             <td>
                                 {v.teamHome+' - '+v.teamAway}
                             </td>
-                            <td>
+                            <td css={tdCenterS(style)}>
                                 {v.finished ? v.scoreHome+' - '+v.scoreAway : '-:-'}
                             </td>
-                            <td>
+                            <td css={[tdCenterS(style), pointsS(style)]}>
                                 {v.finished ? points2text(v.pointsHome)+' - '+points2text(v.pointsAway) : ''}
                             </td>
                         </tr>

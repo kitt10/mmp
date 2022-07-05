@@ -97,6 +97,8 @@ export interface DataContextI {
   schedule: ScheduleI
   loadSchedule: () => void
   lastMatchInd: lastMatchIndI
+  teams: TeamsI
+  players: PlayersI
 }
 
 const DataContext = createContext<DataContextI>({} as DataContextI)

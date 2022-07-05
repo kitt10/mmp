@@ -8,6 +8,8 @@ export const useData = () => {
     const [scheduleLoaded, setScheduleLoaded] = useState(false)
     const [schedule, setSchedule] = useState({} as ScheduleI)
     const [lastMatchInd, setLastMatchInd] = useState(defaultLastMatchInd)
+    const [teamsM, setTeamsM] = useState({} as TeamsI)
+    const [playersM, setPlayersM] = useState({} as PlayersI)
 
     const loadSchedule = async () => {
         await get(cfg.serverURL+'/schedule/', true).then(async (data: any) => {
@@ -87,8 +89,8 @@ export const useData = () => {
             }
         }
 
-        console.log(teams)
-        console.log(players)
+        setTeamsM(teams)
+        setPlayersM(players)
 
     }
 
@@ -105,7 +107,9 @@ export const useData = () => {
         scheduleLoaded: scheduleLoaded,
         schedule: schedule,
         loadSchedule: loadSchedule,
-        lastMatchInd: lastMatchInd
+        lastMatchInd: lastMatchInd,
+        teams: teamsM,
+        players: playersM
     }
 
     return dataContext
