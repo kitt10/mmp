@@ -22,8 +22,7 @@ const schedulesS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignItems: 'flex-start',
-    border: '1px solid red'
+    alignItems: 'flex-start'
 })
 
 const rightS = (style: StyleI) => css({

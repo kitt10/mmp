@@ -25,7 +25,6 @@ const titleS = (style: StyleI) => css({
 
 const tableS = (style: StyleI) => css({
     width: '100%',
-    border: '1px solid red',
     'td': {
         fontSize: '10px'
     }
@@ -39,8 +38,6 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ group }) => {
 
     const { style } = useMainContext()
     const { schedule } = useDataContext()
-
-    console.log(schedule)
 
     return (
         <div css={componentS(style)}>
