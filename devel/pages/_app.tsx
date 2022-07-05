@@ -14,8 +14,9 @@ const MainApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     if (mainContext.gameLaunched) {
       dataContext.loadSchedule()
+      console.log('Schedule loaded.')
     }
-  }, [])
+  }, [mainContext.gameLaunched])
 
   return (
     <MainContext.Provider value={mainContext}>

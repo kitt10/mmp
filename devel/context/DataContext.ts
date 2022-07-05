@@ -59,9 +59,9 @@ export interface lastMatchIndI {
 }
 
 export const defaultLastMatchInd: lastMatchIndI = {
-    'A': 0,
-    'B': 0,
-    'P': 0
+    'A': 1,
+    'B': 1,
+    'P': 1
 }
 
 export interface DataContextI {

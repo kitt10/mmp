@@ -3,6 +3,7 @@ from tornado.ioloop import IOLoop
 from tornado.escape import json_decode
 from os.path import join, dirname, isfile
 from json import dumps as json_dumps, dump as json_dump, load as json_load
+from datetime import datetime
 import numpy as np
 
 class EP_Web(RequestHandler):
@@ -87,9 +88,8 @@ class EP_Update(RequestHandler):
 
     def post(self):
         query = json_decode(self.request.body)
-        print(query)
-        error = False
-        self.write('ERR: '+error if error else 'OK')
+        self.worker.update(query)
+        self.write(json_dumps({'status': 'OK'}))
         
     def options(self):
         self.set_status(204)
@@ -148,6 +148,7 @@ class Worker:
             draw = json_load(f)
 
         schedule = dict((g, dict()) for g in groups)
+        schedule.update({'P': dict()})
 
         for g in groups:
             n = len(draw[g])
@@ -192,6 +193,19 @@ class Worker:
             json_dump(schedule, f)
 
         print('[LOG] Schedule generated.')
+        
+    def update(self, q):
+        with open('../data/schedule.json', 'r') as frj:
+            schedule = json_load(frj)
+        
+        ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-4]
+        with open(f'../data/backup/schedule_{ts}.json', 'w') as fwj:
+            json_dump(schedule, fwj)
+            
+        schedule[q['section']][q['nb']] = q['match']
+            
+        with open('../data/schedule.json', 'w') as fwj:
+            json_dump(schedule, fwj)
     
     
 

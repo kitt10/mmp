@@ -21,6 +21,7 @@ export const useData = () => {
     useEffect(() => {
         if (Object.keys(schedule).includes('A') && Object.keys(schedule).includes('B') && Object.keys(schedule).includes('P')) {
             setScheduleLoaded(true)
+            console.log('Schedule successfully loaded.')
         } else {
             setScheduleLoaded(false)
         }
