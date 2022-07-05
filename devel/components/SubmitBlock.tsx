@@ -133,6 +133,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     const [currentInd, setCurrentInd] = useState(lastMatchInd[group])
 
     const [match, setMatch] = useState({...schedule[group][currentInd]})
+    const [valFinished, setValFinished] = useState(match.finished)
     const [valScoreHome, setValScoreHome] = useState(match.scoreHome)
     const [valScoreAway, setValScoreAway] = useState(match.scoreAway)
     const [valPointsHome, setValPointsHome] = useState(points2text(match.pointsHome))
@@ -144,23 +145,34 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     const refPointsAway: React.RefObject<HTMLTextAreaElement> = createRef() as React.RefObject<HTMLTextAreaElement>
 
     const handleUpdate = async () => {
+        let pHome = valPointsHome != '' ? text2points(valPointsHome) : match.pointsHome
+        let pAway = valPointsAway != '' ? text2points(valPointsAway) : match.pointsAway
+        let matchToBeSent = {...match,
+            finished: valFinished,
+            scoreHome: valScoreHome, 
+            scoreAway: valScoreAway, 
+            pointsHome: pHome,
+            pointsAway: pAway
+        }
+
+        console.log('sending match:', matchToBeSent)
+
         updateSchedule(
             group,
             match.nb,
-            match
+            matchToBeSent
         )
-        console.log('sending match:', match)
     }
 
     const handleFinishedClicked = () => {
-        setMatch({...match, finished: !match.finished})
+        setValFinished(!valFinished)
     }
 
     const handleScoreHomeChanged = () => {
         try {
             if (refGoalsHome.current) {
                 setValScoreHome(+refGoalsHome.current.value)
-                setMatch({...match, scoreHome: +refGoalsHome.current.value})
+                //setMatch({...match, scoreHome: +refGoalsHome.current.value})
             }
         } catch {
             console.log('Exception in handleScoreHomeChanged()')
@@ -171,7 +183,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
         try {
             if (refGoalsAway.current) {
                 setValScoreAway(+refGoalsAway.current.value)
-                setMatch({...match, scoreAway: +refGoalsAway.current.value})
+                //setMatch({...match, scoreAway: +refGoalsAway.current.value})
             }
         } catch {
             console.log('Exception in handleScoreHomeChanged()')
@@ -182,7 +194,6 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
         if (refPointsHome.current) {
             let text = refPointsHome.current.value
             setValPointsHome(text)
-            setMatch({...match, pointsHome: text2points(text)})
         }
     }
 
@@ -190,7 +201,6 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
         if (refPointsAway.current) {
             let text = refPointsAway.current.value
             setValPointsAway(text)
-            setMatch({...match, pointsAway: text2points(text)})
         }
     }
 
@@ -211,6 +221,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     }, [currentInd])
 
     useEffect(() => {
+        setValFinished(match.finished)
         setValScoreHome(match.scoreHome)
         setValScoreAway(match.scoreAway)
         setValPointsHome(points2text(match.pointsHome))
@@ -237,8 +248,8 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
                         <td colSpan={2}>
                             <IconButton 
                                 fontSize={'35px'}
-                                color={match.finished ? 'darkgreen' : 'maroon'}
-                                onClick={() => handleFinishedClicked()}>{match.finished ? 'check_box' : 'check_box_outline_blank'}</IconButton>
+                                color={valFinished ? 'darkgreen' : 'maroon'}
+                                onClick={() => handleFinishedClicked()}>{valFinished ? 'check_box' : 'check_box_outline_blank'}</IconButton>
                         </td>
                     </tr>
                     <tr>
@@ -271,14 +282,14 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
                         <td>
                             <textarea 
                                 ref={refPointsHome}
-                                defaultValue={points2text(match.pointsHome)}
+                                value={valPointsHome}
                                 onChange={() => handlePointsHomeChanged()}
                                 css={pointsS(style)} />
                         </td>
                         <td>
                             <textarea 
                                 ref={refPointsAway}
-                                defaultValue={points2text(match.pointsAway)}
+                                value={valPointsAway}
                                 onChange={() => handlePointsAwayChanged()}
                                 css={pointsS(style)} />
                         </td>
