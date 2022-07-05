@@ -21,7 +21,7 @@ const schedulesS = (style: StyleI) => css({
     maxWidth: '50%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'top',
     alignItems: 'flex-start'
 })
 
@@ -49,7 +49,7 @@ const tablesS = (style: StyleI) => css({
     maxWidth: '40%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'top',
     alignItems: 'flex-start'
 })
 
