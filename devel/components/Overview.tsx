@@ -31,8 +31,7 @@ const rightS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    border: '1px solid green'
+    alignItems: 'flex-start'
 })
 
 const rightTopS = (style: StyleI) => css({
@@ -42,8 +41,7 @@ const rightTopS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'top',
-    border: '1px solid green'
+    alignItems: 'top'
 })
 
 const tablesS = (style: StyleI) => css({
@@ -52,8 +50,7 @@ const tablesS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    border: '1px solid blue'
+    alignItems: 'flex-start'
 })
 
 const scorersS = (style: StyleI) => css({
@@ -62,8 +59,7 @@ const scorersS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'top',
-    alignItems: 'left',
-    border: '1px solid pink'
+    alignItems: 'left'
 })
 
 const playoffS = (style: StyleI) => css({
@@ -74,8 +70,7 @@ const playoffS = (style: StyleI) => css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-    border: '1px solid pink'
+    alignItems: 'center'
 })
 
 const Overview: React.FunctionComponent = props => {
