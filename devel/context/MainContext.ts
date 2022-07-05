@@ -22,6 +22,7 @@ export interface MainContextI {
   gameLaunched: boolean
   launchGame: (draw: DrawI) => void
   updateSchedule: (section: string, nb: number, match: ScheduleItemI) => void
+  setGameLaunched: (launched: boolean) => void
 }
 
 const MainContext = createContext<MainContextI>({} as MainContextI)

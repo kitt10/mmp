@@ -1,3 +1,4 @@
+import { playerPointsI } from "../context/DataContext";
 import { StyleI } from "../context/MainContext"
 
 export const rKey = () => {
@@ -24,4 +25,35 @@ export const mean = (a: number[]) => {
 
 export const toClipboard = (content: string) => {
     navigator.clipboard.writeText(content).then().catch(e => console.error(e))
+}
+
+export const points2text = (points: playerPointsI) => {
+    try {
+        let text = ''
+        for (let [k, v] of Object.entries(points)) {
+            text += k+':'+v.goals.toString()+':'+v.assists.toString()+'\n'
+        }
+        return text
+    } catch {
+        console.log('Exception in points2text,', Object.entries(points))
+        return ''
+    }
+}
+
+export const text2points = (text: string) => {
+    try {
+        let points = {} as playerPointsI
+        let lines = text.split('\n')
+        for (let line of lines) {
+            let vals = line.split(':')
+            points[vals[0]] = {
+                goals: +vals[1],
+                assists: +vals[2]
+            }
+        }
+        return points
+    } catch {
+        console.log('Exception in text2points,',  text)
+        return {} as playerPointsI
+    }
 }

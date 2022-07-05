@@ -1,8 +1,9 @@
 import React, { useEffect, useState, createRef } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
-import { playerPointsI, ScheduleItemI, useDataContext } from '../context/DataContext'
+import { useDataContext } from '../context/DataContext'
 import IconButton from './atomic/IconButton'
+import { text2points, points2text } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
@@ -88,37 +89,6 @@ const submitButtonS = (style: StyleI) => css({
         backgroundColor: style.colors.highlight
     }
 })
-
-const points2text = (points: playerPointsI) => {
-    try {
-        let text = ''
-        for (let [k, v] of Object.entries(points)) {
-            text += k+':'+v.goals.toString()+':'+v.assists.toString()+'\n'
-        }
-        return text
-    } catch {
-        console.log('Exception in points2text,', Object.entries(points))
-        return ''
-    }
-}
-
-const text2points = (text: string) => {
-    try {
-        let points = {} as playerPointsI
-        let lines = text.split('\n')
-        for (let line of lines) {
-            let vals = line.split(':')
-            points[vals[0]] = {
-                goals: +vals[1],
-                assists: +vals[2]
-            }
-        }
-        return points
-    } catch {
-        console.log('Exception in text2points,',  text)
-        return {} as playerPointsI
-    }
-}
 
 interface SubmitBlockI {
     section: string

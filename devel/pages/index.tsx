@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 import Page from '../components/core/Page'
 import { StyleI, useMainContext } from '../context/MainContext'
 import Overview from '../components/Overview'
+import { useDataContext } from '../context/DataContext'
 
 const notLaunchedMessageS = (style: StyleI) => css({
   width: '100%',
@@ -23,13 +24,16 @@ const logoS = (style: StyleI) => css({
 const Home = () => {
 
   const { style, gameLaunched } = useMainContext()
+  const { schedule } = useDataContext()
+
+  const scheduleLoaded = Object.keys(schedule).includes('A') && Object.keys(schedule).includes('B') && Object.keys(schedule).includes('P')
 
   return (
     <Page title='MMP 2022' description='9. ročník Memoriálu Martina Procházky (2022)'>
-      {gameLaunched &&
+      {gameLaunched && scheduleLoaded &&
         <Overview />
       }
-      {!gameLaunched &&
+      {!gameLaunched && scheduleLoaded &&
         <div css={notLaunchedMessageS(style)}>
           {'Turnaj ještě nebyl zahájen. \xa0\xa0\xa0 Čekáme na losování. \xa0\xa0\xa0 Máš formu?'}
           <img css={logoS(style)} src='img/logo.png' />

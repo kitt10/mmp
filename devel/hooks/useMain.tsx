@@ -37,18 +37,9 @@ export const useMain = () => {
         })
     }
 
-    const checkIsLaunched = async () => {
-        await get(cfg.serverURL+'/islaunched/', true).then(async (data: any) => {
-            setGameLaunched(data.launched)
-        }).catch(() => {
-            console.log('Unable to fetch isLaunched data.')
-            setGameLaunched(false)
-        })
-    }
-
-    useEffect(() => {
-        checkIsLaunched()
-    }, [])
+    //useEffect(() => {
+    //    checkIsLaunched()
+    //}, [])
 
     const mainContext: MainContextI = {
         style: {
@@ -62,7 +53,8 @@ export const useMain = () => {
         device: device,
         gameLaunched: gameLaunched,
         launchGame: launchGame,
-        updateSchedule: updateSchedule
+        updateSchedule: updateSchedule,
+        setGameLaunched: setGameLaunched
     }
 
     return mainContext
