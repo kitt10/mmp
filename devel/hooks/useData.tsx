@@ -54,15 +54,41 @@ export const useData = () => {
             }
         }
 
-        console.log('teams:', teams)
-        console.log('players:', players)
-
         // Stats
         for (let [group, sch] of Object.entries(schedule)) {
             for (let [nb, match] of Object.entries(sch)) {
+                if (match.finished) {
+                    teams[group][match.teamHome].goalsPlus += match.scoreHome
+                    teams[group][match.teamHome].goalsMinus += match.scoreAway
+                    teams[group][match.teamHome].goalsDiff = teams[group][match.teamHome].goalsPlus - teams[group][match.teamHome].goalsMinus
+                    teams[group][match.teamHome].matches += 1
+                    teams[group][match.teamHome].points += match.scoreHome > match.scoreAway ? 3 : match.scoreHome == match.scoreAway ? 1 : 0
 
+                    teams[group][match.teamAway].goalsPlus += match.scoreAway
+                    teams[group][match.teamAway].goalsMinus += match.scoreHome
+                    teams[group][match.teamAway].goalsDiff = teams[group][match.teamAway].goalsPlus - teams[group][match.teamAway].goalsMinus
+                    teams[group][match.teamAway].matches += 1
+                    teams[group][match.teamAway].points += match.scoreAway > match.scoreHome ? 3 : match.scoreAway == match.scoreHome ? 1 : 0
+
+                    for (let name of Object.keys(match.pointsHome)) {
+                        players[name].goals += match.pointsHome[name].goals
+                        players[name].assists += match.pointsHome[name].assists
+                        players[name].points = players[name].goals + players[name].assists
+                        players[name].meanPoints = players[name].points / players[name].team.matches
+                    }
+
+                    for (let name of Object.keys(match.pointsAway)) {
+                        players[name].goals += match.pointsAway[name].goals
+                        players[name].assists += match.pointsAway[name].assists
+                        players[name].points = players[name].goals + players[name].assists
+                        players[name].meanPoints = players[name].points / players[name].team.matches
+                    }
+                }
             }
         }
+
+        console.log(teams)
+        console.log(players)
 
     }
 
