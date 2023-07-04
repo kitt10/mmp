@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import { TeamI, useDataContext } from '../context/DataContext'
-import { rKey } from '../fcn/format'
+import { maxNChars, rKey } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
@@ -58,41 +58,45 @@ const Table: React.FunctionComponent<TableI> = ({ group }) => {
     const { style } = useMainContext()
     const { sortedTeams } = useDataContext()
 
+    console.log('Sorted:', sortedTeams)
+
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>
                 Tabulka - skupina {group}
             </div>
-            <table css={tableS(style)}>
-                <tbody>
-                    <tr>
-                        <th>{'#'}</th>
-                        <th>{'tým'}</th>
-                        <th>{'zápasy'}</th>
-                        <th>{'skóre'}</th>
-                        <th>{'body'}</th>
-                    </tr>
-                    {sortedTeams[group].map((team: TeamI, ind: number) => 
-                        <tr key={rKey()} css={tableLineS(ind <= 3, style)}>
-                            <td css={tdCenterS(style)}>
-                                {ind+1}
-                            </td>
-                            <td>
-                                {team.name}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {team.matches}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {team.goalsPlus+':'+team.goalsMinus}
-                            </td>
-                            <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
-                                {team.points}
-                            </td>
+            {group in sortedTeams && 
+                <table css={tableS(style)}>
+                    <tbody>
+                        <tr>
+                            <th>{'#'}</th>
+                            <th>{'tým'}</th>
+                            <th>{'zápasy'}</th>
+                            <th>{'skóre'}</th>
+                            <th>{'body'}</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
+                        {sortedTeams[group].map((team: TeamI, ind: number) => 
+                            <tr key={rKey()} css={tableLineS(ind <= 3, style)}>
+                                <td css={tdCenterS(style)}>
+                                    {ind+1}
+                                </td>
+                                <td>
+                                    {maxNChars(team.name, 20)}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {team.matches}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {team.goalsPlus+':'+team.goalsMinus}
+                                </td>
+                                <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
+                                    {team.points}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            }
         </div>
     )
 }

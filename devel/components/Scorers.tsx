@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
-import { defaultPlayer, PlayerI, useDataContext } from '../context/DataContext'
-import { rKey, round2 } from '../fcn/format'
+import { PlayerI, useDataContext } from '../context/DataContext'
+import { rKey, round2, maxNChars } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
@@ -45,7 +45,8 @@ const tableS = (style: StyleI) => css({
     width: '100%',
     position: 'relative',
     'td': {
-        fontSize: '10px'
+        fontSize: '10px',
+        whiteSpace: 'nowrap'
     },
     'th': {
         fontWeight: 'bold',
@@ -67,17 +68,29 @@ const Scorers: React.FunctionComponent = () => {
     const { players } = useDataContext()
 
     const [scorers, setScorers] = useState([] as PlayerI[])
-
-    const maxNChars = (inp: string, n=20) => {
-        return inp.substring(0, n)
-    }
     
     useEffect(() => {
         setScorers(Object.values(players).sort((p1: PlayerI, p2: PlayerI) => {
+            // points
             if (p1.points > p2.points) {
                 return -1
             } else if (p1.points == p2.points) {
-                return p1.meanPoints > p2.meanPoints ? -1 : 1
+                // mean points
+                if (p1.meanPoints > p2.meanPoints) {
+                    return -1
+                } else if (p1.meanPoints < p2.meanPoints) {
+                    return  1
+                } else {
+                    // goals
+                    if (p1.goals > p2.goals) {
+                        return -1
+                    } else if (p1.goals < p2.goals) {
+                        return  1
+                    } else {
+                        return p1.name.localeCompare(p2.name)
+                    }
+
+                }
             } else {
                 return 1
             }
@@ -108,10 +121,10 @@ const Scorers: React.FunctionComponent = () => {
                                     {ind+1}
                                 </td>
                                 <td css={{'width': '100%'}}>
-                                    {player.name}
+                                    {maxNChars(player.name, 20)}
                                 </td>
                                 <td css={tdCenterS(style)}>
-                                    {maxNChars(player.team.name)}
+                                    {maxNChars(player.team.name, 15)}
                                 </td>
                                 <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
                                     {player.points}

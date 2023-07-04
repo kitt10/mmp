@@ -10,9 +10,9 @@ const componentS = (style: StyleI) => css({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
+  flexWrap: 'wrap',
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: '50px',
   overflowY: 'scroll'
 })
 
@@ -27,9 +27,12 @@ const Admin = () => {
         {!gameLaunched && <Draw />}
         {gameLaunched && scheduleLoaded && 
           <Fragment>
-            <SubmitBlock section={'A'} />
-            <SubmitBlock section={'B'} />
-            <SubmitBlock section={'Play-Off'} />
+            <SubmitBlock group={'A'} />
+            <SubmitBlock group={'B'} />
+            <SubmitBlock group={'C'} />
+            <SubmitBlock group={'D'} />
+            <SubmitBlock group={'P1'} />
+            <SubmitBlock group={'P2'} />
           </Fragment>
         }
       </div>

@@ -46,19 +46,21 @@ export const useData = () => {
 
                 for (let name of Object.keys(match.pointsHome)) {
                     if (!Object.keys(players).includes(name)) {
-                        players[name+'-'+teams[group][match.teamHome]] = {...defaultPlayer,
-                            name: name,
+                        players[name] = {...defaultPlayer,
+                            name: name.split('-')[0],
                             team: teams[group][match.teamHome]}
                     }
                 }
                 
                 for (let name of Object.keys(match.pointsAway)) {
                     if (!Object.keys(players).includes(name)) {
-                        players[name+'-'+teams[group][match.teamAway]] = {...defaultPlayer,
-                            name: name,
+                        players[name] = {...defaultPlayer,
+                            name: name.split('-')[0],
                             team: teams[group][match.teamAway]}
                     }
                 }
+
+                console.log('Players:', players)
             }
         }
 
@@ -87,33 +89,16 @@ export const useData = () => {
                     }
 
                     for (let name of Object.keys(match.pointsHome)) {
-                        players[name+'-'+match.teamHome].goals += match.pointsHome[name].goals
-                        players[name+'-'+match.teamHome].assists += match.pointsHome[name].assists
+                        players[name].goals += match.pointsHome[name].goals
+                        players[name].assists += match.pointsHome[name].assists
                     }
 
                     for (let name of Object.keys(match.pointsAway)) {
-                        players[name+'-'+match.teamAway].goals += match.pointsAway[name].goals
-                        players[name+'-'+match.teamAway].assists += match.pointsAway[name].assists
+                        players[name].goals += match.pointsAway[name].goals
+                        players[name].assists += match.pointsAway[name].assists
                     }
                 }
             }
-
-            // Sort groups
-            setSortedTeams({...sortedTeams, group: Object.values(teams[group]).sort((t1: TeamI, t2: TeamI) => {
-                if (t1.points > t2.points) {
-                    return -1
-                } else if (t1.points == t2.points) {
-                    if (t1.scalps.includes(t2.name)) {
-                        return -1
-                    } else if (t2.scalps.includes(t1.name)) {
-                        return 1
-                    } else {
-                        return t1.goalsDiff > t2.goalsDiff ? -1 : 1
-                    }
-                } else {
-                    return 1
-                }
-            })})
         }
 
         for (let player of Object.values(players)) {
@@ -141,6 +126,44 @@ export const useData = () => {
             computeStats()
         }
     }, [groups, scheduleLoaded])
+
+    useEffect(() => {
+        // Sort groups
+        let tmp = {} as {[k: string]: any}
+
+        for (let g of groups) {
+            if (!g.includes('P')) {
+                tmp[g] = Object.values(teamsM[g]).sort((t1: TeamI, t2: TeamI) => {
+                    // points
+                    if (t1.points > t2.points) {
+                        return -1
+                    } else if (t1.points == t2.points) {
+                        // head to head
+                        if (t1.scalps.includes(t2.name)) {
+                            return -1
+                        } else if (t2.scalps.includes(t1.name)) {
+                            return 1
+                        } else {
+                            // score
+                            if (t1.goalsDiff > t2.goalsDiff) {
+                                return -1
+                            } else if (t1.goalsDiff < t2.goalsDiff) {
+                                return 1
+                            } else {
+                                // goals scored
+                                return t1.goalsPlus > t2.goalsPlus ? -1 : 1
+                            }
+                        }
+                    } else {
+                        return 1
+                    }
+                })
+            }
+        }
+
+        setSortedTeams(tmp)
+
+    }, [teamsM])
 
     const dataContext: DataContextI = {
         scheduleLoaded,

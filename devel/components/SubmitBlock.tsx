@@ -19,8 +19,7 @@ const componentS = (style: StyleI) => css({
     alignItems: 'left',
     padding: '25px',
     borderRadius: '5px',
-    marginLeft: '25px',
-    marginRight: '25px'
+    margin: '25px'
 })
 
 const titleS = (style: StyleI) => css({
@@ -91,15 +90,14 @@ const submitButtonS = (style: StyleI) => css({
 })
 
 interface SubmitBlockI {
-    section: string
+    group: string
 }
 
-const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
+const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ group }) => {
 
     const { style, updateSchedule } = useMainContext()
     const { schedule, lastMatchInd } = useDataContext()
 
-    const group: string = section.startsWith('Play') ? 'P' : section
     const [currentInd, setCurrentInd] = useState(lastMatchInd[group])
 
     const [match, setMatch] = useState({...schedule[group][currentInd]})
@@ -115,8 +113,8 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     const refPointsAway: React.RefObject<HTMLTextAreaElement> = createRef() as React.RefObject<HTMLTextAreaElement>
 
     const handleUpdate = async () => {
-        let pHome = valPointsHome != '' ? text2points(valPointsHome) : match.pointsHome
-        let pAway = valPointsAway != '' ? text2points(valPointsAway) : match.pointsAway
+        let pHome = valPointsHome != '' ? text2points(valPointsHome, match.teamHome) : match.pointsHome
+        let pAway = valPointsAway != '' ? text2points(valPointsAway, match.teamAway) : match.pointsAway
         let matchToBeSent = {...match,
             finished: valFinished,
             scoreHome: valScoreHome, 
@@ -201,7 +199,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ section }) => {
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>
-                Zápasy: {section.startsWith('Play') ? section : 'skupina '+section}
+                Zápasy: {group.startsWith('P') ? group : 'skupina '+group}
             </div>
             <div css={barS(style)}>
                 <IconButton 

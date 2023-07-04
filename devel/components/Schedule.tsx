@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import { ScheduleItemI, useDataContext } from '../context/DataContext'
-import { points2text, rKey } from '../fcn/format'
+import { maxNChars, points2text, rKey } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
@@ -32,7 +32,8 @@ const tableS = (style: StyleI) => css({
         whiteSpace: 'nowrap'
     },
     'tr td:last-child': {
-        width: '100%'
+        width: '100%',
+        fontSize: '9px',
     }
 })
 
@@ -48,7 +49,6 @@ const splitTdS = (style: StyleI) => css({
 })
 
 const pointsS = (style: StyleI) => css({
-    fontSize: '90%',
     fontWeight: 'normal',
     color: 'darkgray',
     width: '100%',
@@ -96,7 +96,7 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
                                 {g+'-'+match.nb+'.kolo'}
                             </td>
                             <td css={tdPadS(style, '0px', '20px', '0px')}>
-                                {match.teamHome+' - '+match.teamAway}
+                                {maxNChars(match.teamHome, 20)+' - '+maxNChars(match.teamAway, 20)}
                             </td>
                             <td css={tdPadS(style, '0px', '20px', '0px')}>
                                 {match.finished ? match.scoreHome+':'+match.scoreAway : '-:-'}
@@ -113,7 +113,7 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
                                 {match.id}
                             </td>
                             <td css={tdPadS(style, '0px', '20px', '3px')}>
-                                {match.teamHome+' - '+match.teamAway}
+                            {maxNChars(match.teamHome, 20)+' - '+maxNChars(match.teamAway, 20)}
                             </td>
                             <td css={tdPadS(style, '0px', '20px', '3px')}>
                                 {match.finished ? match.scoreHome+':'+match.scoreAway : '-:-'}

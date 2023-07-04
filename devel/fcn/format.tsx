@@ -31,7 +31,7 @@ export const points2text = (points: playerPointsI) => {
     try {
         let text = ''
         for (let [k, v] of Object.entries(points)) {
-            text += k+':'+v.goals.toString()+':'+v.assists.toString()+'\n'
+            text += k.split('-')[0]+':'+v.goals.toString()+':'+v.assists.toString()+'\n'
         }
         return text
     } catch {
@@ -40,13 +40,13 @@ export const points2text = (points: playerPointsI) => {
     }
 }
 
-export const text2points = (text: string) => {
+export const text2points = (text: string, teamName: string) => {
     try {
         let points = {} as playerPointsI
         let lines = text.split('\n')
         for (let line of lines) {
             let vals = line.split(':')
-            points[vals[0]] = {
+            points[vals[0]+'-'+teamName] = {
                 goals: +vals[1],
                 assists: +vals[2]
             }
@@ -55,5 +55,13 @@ export const text2points = (text: string) => {
     } catch {
         console.log('Exception in text2points,',  text)
         return {} as playerPointsI
+    }
+}
+
+export const maxNChars = (inp: string, n=20) => {
+    if (inp.length > n) {
+        return inp.substring(0, n-2)+'..'
+    } else {
+        return inp
     }
 }
