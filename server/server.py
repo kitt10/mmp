@@ -147,7 +147,7 @@ class Worker:
         print(f'[LOG] Generating schedule, groups: {groups}')
 
         schedule = dict((g, dict()) for g in groups)
-        schedule.update({'P': dict()})
+        schedule.update({'P1': dict(), 'P2': dict()})
 
         for g in groups:
             n = len(draw[g])
@@ -170,27 +170,40 @@ class Worker:
                 schedule[g][match['nb']] = match
         
         if len(groups) > 2:
-            matches = ('O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
-            labels = ('A1xC4', 'B1xD4', 'C1xA4', 'D1xB4', 'A2xC3', 'B2xD3', 'C2xA3', 'D2xB3', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?')
+            matches = {
+                'P1': ('Osm.1', 'Osm.2', 'Osm.5', 'Osm.6', 'Čtv.1', 'Čtv.2', 'Sem.1', 'O 3.místo', 'Finále'),
+                'P2': ('Osm.3', 'Osm.4', 'Osm.7', 'Osm.8', 'Čtv.3', 'Čtv.4', 'Sem.2')
+            }
+            labels = {
+                'P1': ('A1xC4', 'B1xD4', 'A2xC3', 'B2xD3', '?x?', '?x?', '?x?', '?x?', '?x?'),
+                'P2': ('C1xA4', 'D1xB4', 'C2xA3', 'D2xB3', '?x?', '?x?', '?x?')
+            }
         else:
-            matches = ('Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
-            labels = ('A1xB4', 'B2xA3', 'B1xA4', 'B3xA2', 'A1/B4xB2/A3', 'B1/A4xB3/A2', '?x?', '?x?')
+            matches = {
+                'P1': ('Čtv.1', 'Čtv.2', 'Sem.1', 'O 3.místo', 'Finále'),
+                'P2': ('Čtv.3', 'Čtv.4', 'Sem.2')
+            }
+            labels = {
+                'P1': ('A1xB4', 'A2xB3', '?x?', '?x?', '?x?'),
+                'P2': ('B1xA4', 'B2xA3', '?x?')
+            }
         
-        for ipm, (pm, lab) in enumerate(zip(matches, labels)):
-            vals = lab.split('x')
-            match = dict()
-            match['nb'] = ipm+1
-            match['id'] = pm
-            match['teamHome'] = vals[0]
-            match['teamAway'] = vals[1]
-            match['finished'] = False
-            match['scoreHome'] = 0
-            match['scoreAway'] = 0
-            match['estimatedStart'] = ''
-            match['pointsHome'] = dict()
-            match['pointsAway'] = dict()
-                
-            schedule['P'][ipm+1] = match
+        for p in ('P1', 'P2'):
+            for ipm, (pm, lab) in enumerate(zip(matches[p], labels[p])):
+                vals = lab.split('x')
+                match = dict()
+                match['nb'] = ipm+1
+                match['id'] = pm
+                match['teamHome'] = vals[0]
+                match['teamAway'] = vals[1]
+                match['finished'] = False
+                match['scoreHome'] = 0
+                match['scoreAway'] = 0
+                match['estimatedStart'] = ''
+                match['pointsHome'] = dict()
+                match['pointsAway'] = dict()
+                    
+                schedule[p][ipm+1] = match
 
         with open('../data/schedule.json', 'w') as f:
             json_dump(schedule, f)

@@ -16,6 +16,7 @@ export interface TeamI {
   goalsDiff: number
   points: number
   upPosition: boolean
+  scalps: string[]
 }
 
 export const defaultTeam: TeamI = {
@@ -25,7 +26,8 @@ export const defaultTeam: TeamI = {
   goalsMinus: 0,
   goalsDiff: 0,
   points: 0,
-  upPosition: false
+  upPosition: false,
+  scalps: []
 }
 
 export interface TeamsI {
@@ -91,7 +93,8 @@ export const defaultLastMatchInd: lastMatchIndI = {
     'B': 1,
     'C': 1,
     'D': 1,
-    'P': 1
+    'P1': 1,
+    'P2': 1
 }
 
 export interface DataContextI {
@@ -101,6 +104,9 @@ export interface DataContextI {
   loadSchedule: () => void
   lastMatchInd: lastMatchIndI
   teams: TeamsI
+  sortedTeams: {
+    [group: string]: TeamI[]
+  }
   players: PlayersI
 }
 

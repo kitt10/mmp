@@ -26,7 +26,7 @@ const Home = () => {
   const { style, gameLaunched } = useMainContext()
   const { schedule, teams, players } = useDataContext()
 
-  const scheduleLoaded = Object.keys(schedule).includes('A') && Object.keys(schedule).includes('B') && Object.keys(schedule).includes('P')
+  const scheduleLoaded = Object.keys(schedule).length > 0
   const statsComputed = Object.keys(teams).length > 0
 
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
-import { useDataContext } from '../context/DataContext'
+import { ScheduleItemI, useDataContext } from '../context/DataContext'
 import { points2text, rKey } from '../fcn/format'
 
 
@@ -42,6 +42,11 @@ const tdPadS = (style: StyleI, left: string, right: string, top: string) => css(
     paddingTop: top
 })
 
+const splitTdS = (style: StyleI) => css({
+    height: '1px',
+    backgroundColor: '#ddd'
+})
+
 const pointsS = (style: StyleI) => css({
     fontSize: '90%',
     fontWeight: 'normal',
@@ -60,32 +65,63 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
     const { style } = useMainContext()
     const { schedule } = useDataContext()
 
+    const titleGroups: string = 'skupina '+groups[0]+(groups.length > 2 ? ', '+groups[1] : '')
+
     const maxMatches = Math.max(...groups.map((g: string) => Object.keys(schedule[g]).length))
+    const listOfStringIDs: string[] = Array.from(Array(maxMatches).keys()).map((num: number) => ''+(num+1))
+
+    const matchesGroupPhase = [] as any[]
+    const matchesPlayOff = [] as any[]
+    for (let nbStr of listOfStringIDs) {
+        for (let g of groups.filter((g: string) => nbStr in schedule[g])) {
+            if (g.includes('P')) {
+                matchesPlayOff.push([g, schedule[g][nbStr]])
+            } else {
+                matchesGroupPhase.push([g, schedule[g][nbStr]])
+            }
+        }
+
+    }
 
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>
-                Rozpis - hřiště {playground}
+                Rozpis - hřiště {playground} ({titleGroups})
             </div>
             <table css={tableS(style)}>
                 <tbody>
-                    {Array.from(Array(maxMatches).keys()).map((num: number) => ''+(num+1)).map((nb: string) =>
-                        groups.filter((g: string) => nb in schedule[g]).map((g: string) => 
-                            <tr key={rKey()} css={{'fontWeight': schedule[g][nb].finished ? 'bold' : 'normal'}}>
-                                <td css={tdPadS(style, '10px', '20px', '3px')}>
-                                    {g+' - '+schedule[g][nb].nb+'.'}
-                                </td>
-                                <td css={tdPadS(style, '0px', '20px', '3px')}>
-                                    {schedule[g][nb].teamHome+' - '+schedule[g][nb].teamAway}
-                                </td>
-                                <td css={tdPadS(style, '0px', '20px', '3px')}>
-                                    {schedule[g][nb].finished ? schedule[g][nb].scoreHome+':'+schedule[g][nb].scoreAway : '-:-'}
-                                </td>
-                                <td css={[tdPadS(style, '0px', '10px', '3px'), pointsS(style)]}>
-                                    {schedule[g][nb].finished ? points2text(schedule[g][nb].pointsHome)+' - '+points2text(schedule[g][nb].pointsAway) : ''}
-                                </td>
-                            </tr>
-                        )
+                    {matchesGroupPhase.map(([g, match]: [string, ScheduleItemI]) => 
+                        <tr key={rKey()} css={{'fontWeight': match.finished ? 'bold' : 'normal'}}>
+                            <td css={tdPadS(style, '10px', '20px', '0px')}>
+                                {g+'-'+match.nb+'.kolo'}
+                            </td>
+                            <td css={tdPadS(style, '0px', '20px', '0px')}>
+                                {match.teamHome+' - '+match.teamAway}
+                            </td>
+                            <td css={tdPadS(style, '0px', '20px', '0px')}>
+                                {match.finished ? match.scoreHome+':'+match.scoreAway : '-:-'}
+                            </td>
+                            <td css={[tdPadS(style, '0px', '10px', '0px'), pointsS(style)]}>
+                                {match.finished ? points2text(match.pointsHome)+' - '+points2text(match.pointsAway) : ''}
+                            </td>
+                        </tr>
+                    )}
+                    <tr><td colSpan={4} css={splitTdS(style)}></td></tr>
+                    {matchesPlayOff.map(([g, match]: [string, ScheduleItemI]) => 
+                        <tr key={rKey()} css={{'fontWeight': match.finished ? 'bold' : 'normal'}}>
+                            <td css={tdPadS(style, '10px', '20px', '3px')}>
+                                {match.id}
+                            </td>
+                            <td css={tdPadS(style, '0px', '20px', '3px')}>
+                                {match.teamHome+' - '+match.teamAway}
+                            </td>
+                            <td css={tdPadS(style, '0px', '20px', '3px')}>
+                                {match.finished ? match.scoreHome+':'+match.scoreAway : '-:-'}
+                            </td>
+                            <td css={[tdPadS(style, '0px', '10px', '3px'), pointsS(style)]}>
+                                {match.finished ? points2text(match.pointsHome)+' - '+points2text(match.pointsAway) : ''}
+                            </td>
+                        </tr>
                     )}
                 </tbody>
             </table>

@@ -103,13 +103,8 @@ const Overview: React.FunctionComponent = props => {
             <div css={schedulesS(style)}>
                 {scheduleLoaded && 
                     <Fragment>
-                        <Schedule playground={'Old Trafford'} groups={groups.length > 2 ? ['A', 'B'] : ['A']} />
-                        <Schedule playground={'Camp Nou'} groups={groups.length > 2 ? ['C', 'D'] : ['B']} />
-                        {groups.length > 2 && 
-                            <div css={playoffS(style)}>
-                                <PlayOff />
-                            </div>
-                        }
+                        <Schedule playground={'Old Trafford'} groups={groups.length > 2 ? ['A', 'B', 'P1'] : ['A', 'P1']} />
+                        <Schedule playground={'Camp Nou'} groups={groups.length > 2 ? ['C', 'D', 'P2'] : ['B', 'P2']} />
                     </Fragment>
                 }
             </div>

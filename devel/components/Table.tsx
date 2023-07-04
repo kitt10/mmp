@@ -56,21 +56,7 @@ interface TableI {
 const Table: React.FunctionComponent<TableI> = ({ group }) => {
 
     const { style } = useMainContext()
-    const { teams } = useDataContext()
-
-    const [thisGroupTeams, setThisGroupTeams] = useState([] as TeamI[])
-    
-    useEffect(() => {
-        setThisGroupTeams(Object.values(teams[group]).sort((t1: TeamI, t2: TeamI) => {
-            if (t1.points > t2.points) {
-                return -1
-            } else if (t1.points == t2.points) {
-                return t1.goalsDiff > t2.goalsDiff ? -1 : 1
-            } else {
-                return 1
-            }
-        }))
-    }, [])
+    const { sortedTeams } = useDataContext()
 
     return (
         <div css={componentS(style)}>
@@ -86,7 +72,7 @@ const Table: React.FunctionComponent<TableI> = ({ group }) => {
                         <th>{'skóre'}</th>
                         <th>{'body'}</th>
                     </tr>
-                    {thisGroupTeams.map((team: TeamI, ind: number) => 
+                    {sortedTeams[group].map((team: TeamI, ind: number) => 
                         <tr key={rKey()} css={tableLineS(ind <= 3, style)}>
                             <td css={tdCenterS(style)}>
                                 {ind+1}
