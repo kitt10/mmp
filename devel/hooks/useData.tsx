@@ -184,28 +184,33 @@ export const useData = (mainContext: MainContextI) => {
                             let doSend = false
                             
                             if (m.teamHome.includes(g)) {
-                                try {
-                                    matchToBeSent['teamHome'] = sortedTeams[g][+m.teamHome.substring(1,2)-1].name
-                                } catch (e) {
+                                let pos = +m.teamAway.substring(1,2)-1
+                                if (pos in sortedTeams[g]) {
+                                    matchToBeSent['teamHome'] = sortedTeams[g][pos].name
+                                } else {
                                     matchToBeSent['teamHome'] = '<free-to-go>'
                                 }
                                 doSend = true
                             }
     
                             if (m.teamAway.includes(g)) {
-                                try {
-                                    matchToBeSent['teamAway'] = sortedTeams[g][+m.teamAway.substring(1,2)-1].name
-                                } catch (e) {
+                                let pos = +m.teamAway.substring(1,2)-1
+                                if (pos in sortedTeams[g]) {
+                                    matchToBeSent['teamAway'] = sortedTeams[g][pos].name
+                                } else {
                                     matchToBeSent['teamAway'] = '<free-to-go>'
                                 }
                                 doSend = true
                             }
-    
-                            mainContext.updateSchedule(
-                                pg,
-                                matchToBeSent.nb,
-                                matchToBeSent
-                            )
+                            
+                            if (doSend) {
+                                mainContext.updateSchedule(
+                                    pg,
+                                    matchToBeSent.nb,
+                                    matchToBeSent
+                                )
+                            }
+                            
                         }
                     }
                 }
