@@ -27,7 +27,8 @@ const titleS = (style: StyleI) => css({
 const tableS = (style: StyleI) => css({
     width: '100%',
     'td': {
-        fontSize: '9px'
+        fontSize: '11px',
+        border: '1px solid pink'
     }
 })
 
@@ -41,36 +42,41 @@ const pointsS = (style: StyleI) => css({
 })
 
 interface ScheduleI {
-    group: string
+    playground: string
+    groups: string[]
 }
 
-const Schedule: React.FunctionComponent<ScheduleI> = ({ group }) => {
+const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) => {
 
     const { style } = useMainContext()
     const { schedule } = useDataContext()
 
+    const maxMatches = Math.max(...groups.map((g: string) => Object.keys(schedule[g]).length))
+
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>
-                Rozpis - skupina {group}
+                Rozpis - hřiště {playground}
             </div>
             <table css={tableS(style)}>
                 <tbody>
-                    {Object.entries(schedule[group]).map(([k, v]) => 
-                        <tr key={rKey()} css={{'color': v.finished ? 'maroon' : 'black'}}>
-                            <td>
-                                {v.nb}
-                            </td>
-                            <td>
-                                {v.teamHome+' - '+v.teamAway}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {v.finished ? v.scoreHome+' - '+v.scoreAway : '-:-'}
-                            </td>
-                            <td css={[tdCenterS(style), pointsS(style)]}>
-                                {v.finished ? points2text(v.pointsHome)+' - '+points2text(v.pointsAway) : ''}
-                            </td>
-                        </tr>
+                    {Array.from(Array(maxMatches).keys()).map((num: number) => ''+num).map((nb: string) =>
+                        groups.filter((g: string) => nb in schedule[g]).map((g: string) => 
+                            <tr key={rKey()} css={{'color': schedule[g][nb].finished ? 'maroon' : 'black'}}>
+                                <td>
+                                    {schedule[g][nb].nb+'. ('+g+')'}
+                                </td>
+                                <td>
+                                    {schedule[g][nb].teamHome+' - '+schedule[g][nb].teamAway}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {schedule[g][nb].finished ? schedule[g][nb].scoreHome+' - '+schedule[g][nb].scoreAway : '-:-'}
+                                </td>
+                                <td css={[tdCenterS(style), pointsS(style)]}>
+                                    {schedule[g][nb].finished ? points2text(schedule[g][nb].pointsHome)+' - '+points2text(schedule[g][nb].pointsAway) : ''}
+                                </td>
+                            </tr>
+                        )
                     )}
                 </tbody>
             </table>

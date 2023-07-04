@@ -7,6 +7,7 @@ export const useData = () => {
 
     const [scheduleLoaded, setScheduleLoaded] = useState(false)
     const [schedule, setSchedule] = useState({} as ScheduleI)
+    const [groups, setGroups] = useState([] as string[])
     const [lastMatchInd, setLastMatchInd] = useState(defaultLastMatchInd)
     const [teamsM, setTeamsM] = useState({} as TeamsI)
     const [playersM, setPlayersM] = useState({} as PlayersI)
@@ -22,7 +23,7 @@ export const useData = () => {
 
     const computeStats = () => {
         console.log('Computing stats...')
-        const teams: TeamsI = {'A': {}, 'B': {}, 'P': {}} as TeamsI
+        const teams: TeamsI = Object.fromEntries(groups.map((g: string) => [g, {}])) as TeamsI
         const players: PlayersI = {} as PlayersI
 
         // Init
@@ -75,18 +76,19 @@ export const useData = () => {
                     for (let name of Object.keys(match.pointsHome)) {
                         players[name].goals += match.pointsHome[name].goals
                         players[name].assists += match.pointsHome[name].assists
-                        players[name].points = players[name].goals + players[name].assists
-                        players[name].meanPoints = players[name].points / players[name].team.matches
                     }
 
                     for (let name of Object.keys(match.pointsAway)) {
                         players[name].goals += match.pointsAway[name].goals
                         players[name].assists += match.pointsAway[name].assists
-                        players[name].points = players[name].goals + players[name].assists
-                        players[name].meanPoints = players[name].points / players[name].team.matches
                     }
                 }
             }
+        }
+
+        for (let player of Object.values(players)) {
+            player.points = player.goals + player.assists
+            player.meanPoints = player.points / player.team.matches
         }
 
         setTeamsM(teams)
@@ -95,19 +97,26 @@ export const useData = () => {
     }
 
     useEffect(() => {
-        if (Object.keys(schedule).includes('A') && Object.keys(schedule).includes('B') && Object.keys(schedule).includes('P')) {
+        if (Object.keys(schedule).length > 0) {
+            setGroups(Object.keys(schedule))
             setScheduleLoaded(true)
-            computeStats()
         } else {
             setScheduleLoaded(false)
         }
     }, [schedule])
 
+    useEffect(() => {
+        if (scheduleLoaded && groups.length > 0) {
+            computeStats()
+        }
+    }, [groups, scheduleLoaded])
+
     const dataContext: DataContextI = {
-        scheduleLoaded: scheduleLoaded,
-        schedule: schedule,
-        loadSchedule: loadSchedule,
-        lastMatchInd: lastMatchInd,
+        scheduleLoaded,
+        schedule,
+        groups,
+        loadSchedule,
+        lastMatchInd,
         teams: teamsM,
         players: playersM
     }

@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import Table from './Table'
 import Schedule from './Schedule'
 import Scorers from './Scorers'
 import PlayOff from './PlayOff'
+import { useDataContext } from '../context/DataContext'
 
 
 const componentS = (style: StyleI) => css({
@@ -34,10 +35,10 @@ const rightS = (style: StyleI) => css({
     alignItems: 'flex-start'
 })
 
-const rightTopS = (style: StyleI) => css({
+const rightTopS = (style: StyleI, fourgroups: boolean) => css({
     width: '100%',
-    height: '70%',
-    maxHeight: '70%',
+    height: fourgroups ? '100%' : '70%',
+    maxHeight: fourgroups ? '100%' : '70%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -76,26 +77,40 @@ const playoffS = (style: StyleI) => css({
 const Overview: React.FunctionComponent = props => {
 
     const { style } = useMainContext()
+    const { scheduleLoaded, groups } = useDataContext()
 
     return (
         <div css={componentS(style)}>
             <div css={schedulesS(style)}>
-                <Schedule group={'A'} />
-                <Schedule group={'B'} />
+                {scheduleLoaded && 
+                    <Fragment>
+                        <Schedule playground={'Old Trafford'} groups={groups.length > 2 ? ['A', 'B'] : ['A']} />
+                        <Schedule playground={'Camp Nou'} groups={groups.length > 2 ? ['C', 'D'] : ['B']} />
+                        {groups.length > 2 && 
+                            <div css={playoffS(style)}>
+                                <PlayOff />
+                            </div>
+                        }
+                    </Fragment>
+                }
             </div>
             <div css={rightS(style)}>
-                <div css={rightTopS(style)}>
+                <div css={rightTopS(style, groups.length > 2)}>
                     <div css={tablesS(style)}>
                         <Table group={'A'} />
                         <Table group={'B'} />
+                        <Table group={'C'} />
+                        <Table group={'D'} />
                     </div>
                     <div css={scorersS(style)}>
                         <Scorers />
                     </div>
                 </div>
-                <div css={playoffS(style)}>
-                    <PlayOff />
-                </div>
+                {groups.length <= 2 && 
+                    <div css={playoffS(style)}>
+                        <PlayOff />
+                    </div>
+                }
             </div>
         </div>
     )

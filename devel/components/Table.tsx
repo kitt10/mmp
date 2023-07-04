@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import { TeamI, useDataContext } from '../context/DataContext'
@@ -8,12 +6,15 @@ import { points2text, rKey } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
-    width: '100%',
+    width: 'calc(100% - 4px)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '20px'
+    paddingBottom: '10px',
+    borderLeft: '2px solid black',
+    borderRight: '2px solid black',
+    borderBottom: '2px solid black'
 })
 
 

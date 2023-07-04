@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import { rKey } from '../fcn/format'
@@ -19,11 +19,29 @@ const componentS = (style: StyleI) => css({
     borderRadius: '5px'
 })
 
-const titleS = (style: StyleI) => css({
+const titleBarS = (style: StyleI) => css({
     paddingBottom: '10px',
     color: style.colors.primary,
     borderBottom: `2px dashed ${style.colors.primary}`,
-    marginBottom: '20px'
+    marginBottom: '20px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+})
+
+const titleS = (style: StyleI) => css({
+    
+})
+
+const subTitleS = (style: StyleI) => css({
+    fontSize: '15px'
+})
+
+const inputNTeamsS = (style: StyleI) => css({
+    padding: '2px',
+    marginLeft: '10px',
+    width: '50px',
+    fontSize: '15px'
 })
 
 const tableS = (style: StyleI) => css({
@@ -63,40 +81,84 @@ const submitButtonS = (style: StyleI) => css({
 const Draw: React.FunctionComponent = props => {
 
     const { style, launchGame } = useMainContext()
+    const [nTeams, setNTeams] = useState(12)
+    const [nTeamsPerGroup, setNTeamsPerGroup] = useState(6)
+    const [groups, setGroups] = useState(['A', 'B'])
 
-    const maxTeamsPerGroup: number = 8
-    const teamsIdsGroupA: string[] = Array.from(Array(maxTeamsPerGroup).keys()).map((ind: number) => 'A'+(ind+1))
-    const teamsIdsGroupB: string[] = Array.from(Array(maxTeamsPerGroup).keys()).map((ind: number) => 'B'+(ind+1))
+    const teamsIdsGroupA: string[] = Array.from(Array(nTeamsPerGroup).keys()).map((ind: number) => 'A'+(ind+1))
+    const teamsIdsGroupB: string[] = Array.from(Array(nTeamsPerGroup).keys()).map((ind: number) => 'B'+(ind+1))
+    const teamsIdsGroupC: string[] = Array.from(Array(nTeamsPerGroup).keys()).map((ind: number) => 'C'+(ind+1))
+    const teamsIdsGroupD: string[] = Array.from(Array(nTeamsPerGroup).keys()).map((ind: number) => 'D'+(ind+1))
 
     const refsA: React.RefObject<HTMLInputElement>[] = teamsIdsGroupA.map((teamId: string) => React.createRef() as React.RefObject<HTMLInputElement>)
     const refsB: React.RefObject<HTMLInputElement>[] = teamsIdsGroupB.map((teamId: string) => React.createRef() as React.RefObject<HTMLInputElement>)
+    const refsC: React.RefObject<HTMLInputElement>[] = teamsIdsGroupB.map((teamId: string) => React.createRef() as React.RefObject<HTMLInputElement>)
+    const refsD: React.RefObject<HTMLInputElement>[] = teamsIdsGroupB.map((teamId: string) => React.createRef() as React.RefObject<HTMLInputElement>)
 
     const handleSubmit = () => {
         console.log('Zahajuji...')
-        const draw: DrawI = {
-            'A': [],
-            'B': []
-        }
-        for (let ind = 0; ind < maxTeamsPerGroup; ind++) {
+
+        const draw: DrawI = Object.fromEntries(groups.map((g: string) => [g, []]))
+        for (let ind = 0; ind < nTeamsPerGroup; ind++) {
+
             //@ts-ignore
             if (refsA[ind].current && refsA[ind].current.value != '') {
                 //@ts-ignore
                 draw['A'].push(refsA[ind].current.value)
             }
+
             //@ts-ignore
             if (refsB[ind].current && refsB[ind].current.value != '') {
                 //@ts-ignore
                 draw['B'].push(refsB[ind].current.value)
+            }
+
+            if (groups.length > 2) {
+                //@ts-ignore
+                if (refsC[ind].current && refsC[ind].current.value != '') {
+                    //@ts-ignore
+                    draw['C'].push(refsC[ind].current.value)
+                }
+
+                //@ts-ignore
+                if (refsD[ind].current && refsD[ind].current.value != '') {
+                    //@ts-ignore
+                    draw['D'].push(refsD[ind].current.value)
+                }
             }
         }
         console.log('Draw:', draw)
         launchGame(draw)
     }
 
+    useEffect(() => {
+        if (nTeams <= 14) {
+            setGroups(['A', 'B'])
+            setNTeamsPerGroup(Math.ceil(nTeams/2))
+        } else {
+            setGroups(['A', 'B', 'C', 'D'])
+            setNTeamsPerGroup(Math.ceil(nTeams/4))
+        }
+    }, [nTeams])
+
     return (
         <div css={componentS(style)}>
-            <div css={titleS(style)}>
-                {'Los turnaje'}
+            <div css={titleBarS(style)}>
+                <div css={titleS(style)}>
+                    {'Los turnaje'}
+                </div>
+                <div css={{'flexGrow': 1}} />
+                <div css={subTitleS(style)}>
+                    {'Počet týmů:'}
+                </div>
+                <input
+                    type={'number'}
+                    min={8}
+                    max={24}
+                    defaultValue={nTeams}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNTeams(+e.target.value)}
+                    css={inputNTeamsS(style)} 
+                    />
             </div>
             <table css={tableS(style)}>
                 <tbody>
@@ -122,6 +184,30 @@ const Draw: React.FunctionComponent = props => {
                             </td>
                         </tr>
                     )}
+                    {groups.length > 2 &&
+                        teamsIdsGroupC.map((teamIdC: string, ind: number) => 
+                            <tr key={rKey()}>
+                                <th>
+                                    {teamIdC}
+                                </th>
+                                <td>
+                                    <input
+                                        type={'text'}
+                                        css={inputS(style)} 
+                                        ref={refsC[ind]} />
+                                </td>
+                                <th>
+                                    {teamsIdsGroupD[ind]}
+                                </th>
+                                <td>
+                                    <input
+                                        type={'text'}
+                                        css={inputS(style)} 
+                                        ref={refsD[ind]} />
+                                </td>
+                            </tr>
+                        )
+                    }
                 </tbody>
             </table>
             <div css={submitLineS(style)}>

@@ -58,7 +58,7 @@ export interface PlayersI {
 
 export interface ScheduleI {
   [group: string]: {
-    [nb: number]: ScheduleItemI
+    [nb: string]: ScheduleItemI
   }
 }
 
@@ -89,12 +89,15 @@ export interface lastMatchIndI {
 export const defaultLastMatchInd: lastMatchIndI = {
     'A': 1,
     'B': 1,
+    'C': 1,
+    'D': 1,
     'P': 1
 }
 
 export interface DataContextI {
   scheduleLoaded: boolean
   schedule: ScheduleI
+  groups: string[]
   loadSchedule: () => void
   lastMatchInd: lastMatchIndI
   teams: TeamsI

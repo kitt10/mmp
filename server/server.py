@@ -137,15 +137,14 @@ class Worker:
         self.base_static_path = base_static_path
     
     def generate_schedule(self):
-        print('[LOG] Generating schedule...')
-        
-        groups = ('A', 'B')
-
         with open('../data/key.json') as f:  
             keys = json_load(f)
 
         with open('../data/draw.json') as f:  
             draw = json_load(f)
+
+        groups = list(draw.keys())
+        print(f'[LOG] Generating schedule, groups: {groups}')
 
         schedule = dict((g, dict()) for g in groups)
         schedule.update({'P': dict()})
@@ -158,7 +157,7 @@ class Worker:
                 t2_ind = int(k[1])-1
                 
                 match = dict()
-                match['nb'] = ik+1
+                match['nb'] = str(ik+1)
                 match['id'] = g+'_'+str(match['nb'])
                 match['teamHome'] = draw[g][t1_ind]
                 match['teamAway'] = draw[g][t2_ind]
@@ -170,8 +169,12 @@ class Worker:
                 match['pointsAway'] = dict()
                 schedule[g][match['nb']] = match
         
-        matches = ('Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
-        labels = ('A1xB4', 'B2xA3', 'B1xA4', 'B3xA2', 'A1/B4xB2/A3', 'B1/A4xB3/A2', '?x?', '?x?')
+        if len(groups) > 2:
+            matches = ('O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
+            labels = ('A1xC4', 'B1xD4', 'C1xA4', 'D1xB4', 'A2xC3', 'B2xD3', 'C2xA3', 'D2xB3', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?', '?x?')
+        else:
+            matches = ('Q1', 'Q2', 'Q3', 'Q4', 'S1', 'S2', 'RD', 'F')
+            labels = ('A1xB4', 'B2xA3', 'B1xA4', 'B3xA2', 'A1/B4xB2/A3', 'B1/A4xB3/A2', '?x?', '?x?')
         
         for ipm, (pm, lab) in enumerate(zip(matches, labels)):
             vals = lab.split('x')

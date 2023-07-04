@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
-import { PlayerI, useDataContext } from '../context/DataContext'
+import { defaultPlayer, PlayerI, useDataContext } from '../context/DataContext'
 import { rKey, round2 } from '../fcn/format'
 
 
@@ -9,8 +9,9 @@ const componentS = (style: StyleI) => css({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'top',
+    alignItems: 'center',
+    overflowY: 'scroll'
 })
 
 const titleS = (style: StyleI) => css({
@@ -21,22 +22,32 @@ const titleS = (style: StyleI) => css({
     paddingBottom: '7px',
     fontVariant: 'small-caps',
     textAlign: 'center',
-    fontSize: '15px'
+    fontSize: '15px',
+    position: 'fixed',
+    zIndex: 1000
 })
 
 const tdCenterS = (style: StyleI) => css({
-    textAlign: 'center'
+    textAlign: 'center',
+    zIndex: 100
 })
 
 const tableS = (style: StyleI) => css({
     width: '100%',
+    height: 'calc(100% - 30px)',
+    position: 'relative',
+    marginTop: '30px',
     'td': {
         fontSize: '9px'
     },
     'th': {
         fontWeight: 'bold',
         fontSize: '10px',
-        paddingBottom: '10px'
+        paddingBottom: '10px',
+        position: 'sticky',
+        top: '35px',
+        zIndex: 500,
+        backgroundColor: '#eee'
     }
 })
 
