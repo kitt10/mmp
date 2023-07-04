@@ -184,6 +184,10 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ group }) => {
         }
     }
 
+    const id2Stadium = (theId: string) => {
+        return theId == 'P1' ? 'Old Trafford': 'Camp Nou'
+    }
+
     useEffect(() => {
         setMatch({...schedule[group][currentInd]})
     }, [currentInd])
@@ -199,7 +203,7 @@ const SubmitBlock: React.FunctionComponent<SubmitBlockI> = ({ group }) => {
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>
-                Zápasy: {group.startsWith('P') ? group : 'skupina '+group}
+                {group.startsWith('P') ? 'PlayOff ('+id2Stadium(group)+') '+match.id : 'Skupina '+group}
             </div>
             <div css={barS(style)}>
                 <IconButton 

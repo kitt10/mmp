@@ -136,7 +136,7 @@ const Scorers: React.FunctionComponent = () => {
                                     {player.assists}
                                 </td>
                                 <td css={tdCenterS(style)}>
-                                    {player.team.matches}
+                                    {player.matches}
                                 </td>
                                 <td css={tdCenterS(style)}>
                                     {round2(player.meanPoints)}

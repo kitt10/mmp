@@ -41,6 +41,7 @@ export interface PlayerI {
   team: TeamI
   goals: number
   assists: number
+  matches: number
   points: number
   meanPoints: number
 }
@@ -50,6 +51,7 @@ export const defaultPlayer: PlayerI = {
   team: {} as TeamI,
   goals: 0,
   assists: 0,
+  matches: 0,
   points: 0,
   meanPoints: 0
 }

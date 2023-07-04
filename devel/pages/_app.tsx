@@ -21,7 +21,7 @@ const checkIsLaunched = async (setGameLaunched: (l: boolean) => void, loadSchedu
 const MainApp = ({ Component, pageProps }: AppProps) => {
 
   const mainContext = useMain()
-  const dataContext = useData()
+  const dataContext = useData(mainContext)
 
   useEffect(() => {
     checkIsLaunched(mainContext.setGameLaunched, dataContext.loadSchedule)

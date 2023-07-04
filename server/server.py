@@ -217,6 +217,8 @@ class Worker:
         ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-4]
         with open(f'../data/backup/schedule_{ts}.json', 'w') as fwj:
             json_dump(schedule, fwj)
+
+        print(f'[LOG] Updating schedule with {q["match"]}')
             
         schedule[q['section']][q['nb']] = q['match']
             
