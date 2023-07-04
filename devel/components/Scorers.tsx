@@ -7,11 +7,11 @@ import { rKey, round2 } from '../fcn/format'
 
 const componentS = (style: StyleI) => css({
     width: '100%',
+    maxHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'top',
-    alignItems: 'center',
-    overflowY: 'scroll'
+    alignItems: 'center'
 })
 
 const titleS = (style: StyleI) => css({
@@ -22,9 +22,18 @@ const titleS = (style: StyleI) => css({
     paddingBottom: '7px',
     fontVariant: 'small-caps',
     textAlign: 'center',
-    fontSize: '15px',
-    position: 'fixed',
-    zIndex: 1000
+    fontSize: '15px'
+})
+
+const contentS = (style: StyleI) => css({
+    width: '100%',
+    height: '100vh',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'top',
+    alignItems: 'center',
+    overflowY: 'auto'
 })
 
 const tdCenterS = (style: StyleI) => css({
@@ -34,20 +43,21 @@ const tdCenterS = (style: StyleI) => css({
 
 const tableS = (style: StyleI) => css({
     width: '100%',
-    height: 'calc(100% - 30px)',
     position: 'relative',
-    marginTop: '30px',
     'td': {
-        fontSize: '9px'
+        fontSize: '10px'
     },
     'th': {
         fontWeight: 'bold',
         fontSize: '10px',
         paddingBottom: '10px',
         position: 'sticky',
-        top: '35px',
+        top: 0,
         zIndex: 500,
-        backgroundColor: '#eee'
+        backgroundColor: '#eee',
+        width: '1%',
+        paddingLeft: '7px',
+        paddingRight: '5px'
     }
 })
 
@@ -75,44 +85,46 @@ const Scorers: React.FunctionComponent = () => {
             <div css={titleS(style)}>
                 Kanadské bodování
             </div>
-            <table css={tableS(style)}>
-                <tbody>
-                    <tr>
-                        <th>{'#'}</th>
-                        <th>{'kanonýr'}</th>
-                        <th>{'body'}</th>
-                        <th>{'góly'}</th>
-                        <th>{'áčka'}</th>
-                        <th>{'zápasy'}</th>
-                        <th>{'mean'}</th>
-                    </tr>
-                    {scorers.map((player: PlayerI, ind: number) => 
-                        <tr key={rKey()}>
-                            <td css={tdCenterS(style)}>
-                                {ind+1}
-                            </td>
-                            <td>
-                                {player.name}
-                            </td>
-                            <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
-                                {player.points}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {player.goals}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {player.assists}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {player.team.matches}
-                            </td>
-                            <td css={tdCenterS(style)}>
-                                {round2(player.meanPoints)}
-                            </td>
+            <div css={contentS(style)}>
+                <table css={tableS(style)}>
+                    <tbody>
+                        <tr>
+                            <th>{'#'}</th>
+                            <th>{'kanonýr'}</th>
+                            <th>{'body'}</th>
+                            <th>{'góly'}</th>
+                            <th>{'asistence'}</th>
+                            <th>{'zápasy'}</th>
+                            <th>{'mean'}</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
+                        {scorers.map((player: PlayerI, ind: number) => 
+                            <tr key={rKey()}>
+                                <td css={tdCenterS(style)}>
+                                    {ind+1}
+                                </td>
+                                <td css={{'width': '100%'}}>
+                                    {player.name}
+                                </td>
+                                <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
+                                    {player.points}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {player.goals}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {player.assists}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {player.team.matches}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {round2(player.meanPoints)}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

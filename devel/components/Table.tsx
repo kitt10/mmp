@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { StyleI, useMainContext } from '../context/MainContext'
 import { TeamI, useDataContext } from '../context/DataContext'
-import { points2text, rKey } from '../fcn/format'
+import { rKey } from '../fcn/format'
 
 
 const componentS = (style: StyleI) => css({
-    width: 'calc(100% - 4px)',
+    width: 'calc(100% - 2px)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

@@ -37,11 +37,12 @@ const rightS = (style: StyleI) => css({
 
 const rightTopS = (style: StyleI, fourgroups: boolean) => css({
     width: '100%',
+    maxWidth: '100%',
     height: fourgroups ? '100%' : '70%',
     maxHeight: fourgroups ? '100%' : '70%',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'top'
 })
 
@@ -65,13 +66,10 @@ const scorersS = (style: StyleI) => css({
 
 const playoffS = (style: StyleI) => css({
     width: '100%',
-    maxWidth: '100%',
-    height: '30%',
-    maxHeight: '30%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-start'
 })
 
 const Overview: React.FunctionComponent = props => {
@@ -95,21 +93,36 @@ const Overview: React.FunctionComponent = props => {
                 }
             </div>
             <div css={rightS(style)}>
-                <div css={rightTopS(style, groups.length > 2)}>
-                    <div css={tablesS(style)}>
-                        <Table group={'A'} />
-                        <Table group={'B'} />
-                        <Table group={'C'} />
-                        <Table group={'D'} />
-                    </div>
-                    <div css={scorersS(style)}>
-                        <Scorers />
-                    </div>
-                </div>
                 {groups.length <= 2 && 
-                    <div css={playoffS(style)}>
-                        <PlayOff />
-                    </div>
+                    <Fragment>
+                        <div css={rightTopS(style, false)}>
+                            <div css={tablesS(style)}>
+                                <Table group={'A'} />
+                                <Table group={'B'} />
+                            </div>
+                            <div css={scorersS(style)}>
+                                <Scorers />
+                            </div>
+                        </div>
+                        <div css={playoffS(style)}>
+                            <PlayOff />
+                        </div>
+                    </Fragment>
+                }
+                {groups.length > 2 &&
+                    <Fragment>
+                        <div css={rightTopS(style, true)}>
+                            <div css={tablesS(style)}>
+                                <Table group={'A'} />
+                                <Table group={'B'} />
+                                <Table group={'C'} />
+                                <Table group={'D'} />
+                            </div>
+                            <div css={scorersS(style)}>
+                                <Scorers />
+                            </div>
+                        </div>
+                    </Fragment>
                 }
             </div>
         </div>

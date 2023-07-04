@@ -28,17 +28,25 @@ const tableS = (style: StyleI) => css({
     width: '100%',
     'td': {
         fontSize: '11px',
-        border: '1px solid pink'
+        width: '1%',
+        whiteSpace: 'nowrap'
+    },
+    'tr td:last-child': {
+        width: '100%'
     }
 })
 
-const tdCenterS = (style: StyleI) => css({
-    textAlign: 'center'
+const tdPadS = (style: StyleI, left: string, right: string, top: string) => css({
+    paddingLeft: left,
+    paddingRight: right,
+    paddingTop: top
 })
 
 const pointsS = (style: StyleI) => css({
     fontSize: '90%',
-    color: 'darkgray'
+    color: 'darkgray',
+    width: '100%',
+    whiteSpace: 'pre-wrap'
 })
 
 interface ScheduleI {
@@ -63,16 +71,16 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
                     {Array.from(Array(maxMatches).keys()).map((num: number) => ''+num).map((nb: string) =>
                         groups.filter((g: string) => nb in schedule[g]).map((g: string) => 
                             <tr key={rKey()} css={{'color': schedule[g][nb].finished ? 'maroon' : 'black'}}>
-                                <td>
-                                    {schedule[g][nb].nb+'. ('+g+')'}
+                                <td css={tdPadS(style, '10px', '20px', '3px')}>
+                                    {g+' - '+schedule[g][nb].nb+'.'}
                                 </td>
-                                <td>
+                                <td css={tdPadS(style, '0px', '20px', '3px')}>
                                     {schedule[g][nb].teamHome+' - '+schedule[g][nb].teamAway}
                                 </td>
-                                <td css={tdCenterS(style)}>
+                                <td css={tdPadS(style, '0px', '20px', '3px')}>
                                     {schedule[g][nb].finished ? schedule[g][nb].scoreHome+' - '+schedule[g][nb].scoreAway : '-:-'}
                                 </td>
-                                <td css={[tdCenterS(style), pointsS(style)]}>
+                                <td css={[tdPadS(style, '0px', '10px', '3px'), pointsS(style)]}>
                                     {schedule[g][nb].finished ? points2text(schedule[g][nb].pointsHome)+' - '+points2text(schedule[g][nb].pointsAway) : ''}
                                 </td>
                             </tr>
