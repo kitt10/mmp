@@ -30,7 +30,7 @@ const Home = () => {
   const statsComputed = Object.keys(teams).length > 0
 
   return (
-    <Page title='MMP 2022' description='9. ročník Memoriálu Martina Procházky (2022)'>
+    <Page title='MMP 2023' description='10. ročník Memoriálu Martina Procházky (2023)'>
       {gameLaunched && scheduleLoaded && statsComputed &&
         <Overview />
       }

@@ -67,6 +67,10 @@ const Scorers: React.FunctionComponent = () => {
     const { players } = useDataContext()
 
     const [scorers, setScorers] = useState([] as PlayerI[])
+
+    const maxNChars = (inp: string, n=20) => {
+        return inp.substring(0, n)
+    }
     
     useEffect(() => {
         setScorers(Object.values(players).sort((p1: PlayerI, p2: PlayerI) => {
@@ -91,6 +95,7 @@ const Scorers: React.FunctionComponent = () => {
                         <tr>
                             <th>{'#'}</th>
                             <th>{'kanonýr'}</th>
+                            <th>{'tým'}</th>
                             <th>{'body'}</th>
                             <th>{'góly'}</th>
                             <th>{'asistence'}</th>
@@ -104,6 +109,9 @@ const Scorers: React.FunctionComponent = () => {
                                 </td>
                                 <td css={{'width': '100%'}}>
                                     {player.name}
+                                </td>
+                                <td css={tdCenterS(style)}>
+                                    {maxNChars(player.team.name)}
                                 </td>
                                 <td css={[tdCenterS(style), {'fontWeight': 'bold'}]}>
                                     {player.points}

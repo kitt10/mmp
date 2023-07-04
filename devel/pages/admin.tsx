@@ -22,7 +22,7 @@ const Admin = () => {
   const { scheduleLoaded } = useDataContext()
 
   return (
-    <Page title='Admin - MMP 2022' description='9. ročník Memoriálu Martina Procházky (2022)'>
+    <Page title='Admin - MMP 2023' description='10. ročník Memoriálu Martina Procházky (2023)'>
       <div css={componentS(style)}>
         {!gameLaunched && <Draw />}
         {gameLaunched && scheduleLoaded && 

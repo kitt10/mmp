@@ -29,6 +29,7 @@ const schedulesS = (style: StyleI) => css({
 const rightS = (style: StyleI) => css({
     width: '50%',
     maxWidth: '50%',
+    maxHeight: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -38,8 +39,8 @@ const rightS = (style: StyleI) => css({
 const rightTopS = (style: StyleI, fourgroups: boolean) => css({
     width: '100%',
     maxWidth: '100%',
-    height: fourgroups ? '100%' : '70%',
-    maxHeight: fourgroups ? '100%' : '70%',
+    height: fourgroups ? '100vh' : '70%',
+    maxHeight: fourgroups ? '100vh' : '70%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -49,10 +50,30 @@ const rightTopS = (style: StyleI, fourgroups: boolean) => css({
 const tablesS = (style: StyleI) => css({
     width: '40%',
     maxWidth: '40%',
+    maxHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'top',
     alignItems: 'flex-start'
+})
+
+const logoFrameS = (style: StyleI) => css({
+    flexGrow: 1,
+    width: '100%',
+    position: 'relative',
+    display: 'inline-block',
+    overflow: 'hidden',
+    margin: 0
+})
+
+const logoS = (style: StyleI) => css({
+    display: 'block',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    maxHeight: '70%',
+    maxWidth: '70%',
+    transform: 'translate(-50%, -50%)'
 })
 
 const scorersS = (style: StyleI) => css({
@@ -117,6 +138,9 @@ const Overview: React.FunctionComponent = props => {
                                 <Table group={'B'} />
                                 <Table group={'C'} />
                                 <Table group={'D'} />
+                                <div css={logoFrameS(style)}>
+                                    <img src={'/img/logo_mmp2023.png'} css={logoS(style)} />
+                                </div>
                             </div>
                             <div css={scorersS(style)}>
                                 <Scorers />

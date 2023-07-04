@@ -44,6 +44,7 @@ const tdPadS = (style: StyleI, left: string, right: string, top: string) => css(
 
 const pointsS = (style: StyleI) => css({
     fontSize: '90%',
+    fontWeight: 'normal',
     color: 'darkgray',
     width: '100%',
     whiteSpace: 'pre-wrap'
@@ -68,9 +69,9 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
             </div>
             <table css={tableS(style)}>
                 <tbody>
-                    {Array.from(Array(maxMatches).keys()).map((num: number) => ''+num).map((nb: string) =>
+                    {Array.from(Array(maxMatches).keys()).map((num: number) => ''+(num+1)).map((nb: string) =>
                         groups.filter((g: string) => nb in schedule[g]).map((g: string) => 
-                            <tr key={rKey()} css={{'color': schedule[g][nb].finished ? 'maroon' : 'black'}}>
+                            <tr key={rKey()} css={{'fontWeight': schedule[g][nb].finished ? 'bold' : 'normal'}}>
                                 <td css={tdPadS(style, '10px', '20px', '3px')}>
                                     {g+' - '+schedule[g][nb].nb+'.'}
                                 </td>
@@ -78,7 +79,7 @@ const Schedule: React.FunctionComponent<ScheduleI> = ({ playground, groups }) =>
                                     {schedule[g][nb].teamHome+' - '+schedule[g][nb].teamAway}
                                 </td>
                                 <td css={tdPadS(style, '0px', '20px', '3px')}>
-                                    {schedule[g][nb].finished ? schedule[g][nb].scoreHome+' - '+schedule[g][nb].scoreAway : '-:-'}
+                                    {schedule[g][nb].finished ? schedule[g][nb].scoreHome+':'+schedule[g][nb].scoreAway : '-:-'}
                                 </td>
                                 <td css={[tdPadS(style, '0px', '10px', '3px'), pointsS(style)]}>
                                     {schedule[g][nb].finished ? points2text(schedule[g][nb].pointsHome)+' - '+points2text(schedule[g][nb].pointsAway) : ''}
