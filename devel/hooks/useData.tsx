@@ -183,8 +183,8 @@ export const useData = (mainContext: MainContextI) => {
                             let matchToBeSent = {...m}
                             let doSend = false
                             
-                            if (m.teamHome.includes(g)) {
-                                let pos = +m.teamAway.substring(1,2)-1
+                            if (m.teamHome.length == 2 && m.teamHome.includes(g)) {
+                                let pos = +m.teamHome.substring(1,2)-1
                                 if (pos < sortedTeams[g].length) {
                                     matchToBeSent['teamHome'] = sortedTeams[g][pos].name
                                 } else {
@@ -193,7 +193,7 @@ export const useData = (mainContext: MainContextI) => {
                                 doSend = true
                             }
     
-                            if (m.teamAway.includes(g)) {
+                            if (m.teamAway.length == 2 && m.teamAway.includes(g)) {
                                 let pos = +m.teamAway.substring(1,2)-1
                                 if (pos < sortedTeams[g].length) {
                                     matchToBeSent['teamAway'] = sortedTeams[g][pos].name
