@@ -58,8 +58,6 @@ const Table: React.FunctionComponent<TableI> = ({ group }) => {
     const { style } = useMainContext()
     const { sortedTeams } = useDataContext()
 
-    console.log('Sorted:', sortedTeams)
-
     return (
         <div css={componentS(style)}>
             <div css={titleS(style)}>

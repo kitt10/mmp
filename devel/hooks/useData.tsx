@@ -43,35 +43,19 @@ export const useData = (mainContext: MainContextI) => {
 
                 for (let name of Object.keys(match.pointsHome)) {
                     if (!Object.keys(players).includes(name)) {
-                        try {
-                            players[name] = {...defaultPlayer,
-                                name: name.split('-')[0],
-                                team: teams[group][match.teamHome]}
-                        } catch (e) {
-                            players[name] = {...defaultPlayer,
-                                name: name.split('-')[0],
-                                team: {...defaultTeam,
-                                    name: match.teamHome}}
-                        }
+                        players[name] = {...defaultPlayer,
+                            name: name.split('-')[0],
+                            team: teams[group][match.teamHome]}
                     }
                 }
                 
                 for (let name of Object.keys(match.pointsAway)) {
                     if (!Object.keys(players).includes(name)) {
-                        try {
-                            players[name] = {...defaultPlayer,
-                                name: name.split('-')[0],
-                                team: teams[group][match.teamAway]}
-                        } catch (e) {
-                            players[name] = {...defaultPlayer,
-                                name: name.split('-')[0],
-                                team: {...defaultTeam,
-                                    name: match.teamAway}}
-                        }
+                        players[name] = {...defaultPlayer,
+                            name: name.split('-')[0],
+                            team: teams[group][match.teamAway]}
                     }
                 }
-
-                console.log('Players:', players)
             }
         }
 
@@ -252,7 +236,7 @@ export const useData = (mainContext: MainContextI) => {
             }
 
             // Osm.3 finished
-            if (schedule['P2']['1'].finished && schedule['P1']['5'].teamHome == '?') {
+            if (schedule['P2']['1'].finished && schedule['P2']['5'].teamHome == '?') {
                 let teamWin = schedule['P2']['1'].scoreHome > schedule['P2']['1'].scoreAway ? schedule['P2']['1'].teamHome : schedule['P2']['1'].teamAway
                 mainContext.updateSchedule(
                     'P2',
@@ -301,7 +285,7 @@ export const useData = (mainContext: MainContextI) => {
                 )
             }
 
-            // Osm.6 finished
+            // Osm.8 finished
             if (schedule['P2']['4'].finished && schedule['P1']['5'].teamAway == '?') {
                 let teamWin = schedule['P2']['4'].scoreHome > schedule['P2']['4'].scoreAway ? schedule['P2']['4'].teamHome : schedule['P2']['4'].teamAway
                 mainContext.updateSchedule(
