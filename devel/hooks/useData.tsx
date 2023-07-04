@@ -185,7 +185,7 @@ export const useData = (mainContext: MainContextI) => {
                             
                             if (m.teamHome.includes(g)) {
                                 let pos = +m.teamAway.substring(1,2)-1
-                                if (pos in sortedTeams[g]) {
+                                if (pos < sortedTeams[g].length) {
                                     matchToBeSent['teamHome'] = sortedTeams[g][pos].name
                                 } else {
                                     matchToBeSent['teamHome'] = '<free-to-go>'
@@ -195,7 +195,7 @@ export const useData = (mainContext: MainContextI) => {
     
                             if (m.teamAway.includes(g)) {
                                 let pos = +m.teamAway.substring(1,2)-1
-                                if (pos in sortedTeams[g]) {
+                                if (pos < sortedTeams[g].length) {
                                     matchToBeSent['teamAway'] = sortedTeams[g][pos].name
                                 } else {
                                     matchToBeSent['teamAway'] = '<free-to-go>'
